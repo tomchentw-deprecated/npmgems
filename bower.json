@@ -1,0 +1,20 @@
+{
+  "name": "npmgems",
+  "version": "0.0.0",
+  "authors": [
+    "tomchentw <developer@tomchentw.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "angular": "~1.2.13",
+    "angular-bootstrap": "~0.10.0",
+    "twbs-bootstrap-sass": "~3.1.1"
+  }
+}

@@ -1,22 +1,23 @@
-require! <[ express express-promise jade ]>
+require! <[ path express express-promise jade ]>
 
-module.exports = ->
-  const app = express!
+module.exports = createServer
 
-  app.set 'showStackError' true
+function createServer
+  express!
+    ..set 'showStackError' true
 
-  app.engine 'jade' jade.__express
+    ..engine 'jade' jade.__express
 
-  app.set 'view engine' 'jade'
+    ..set 'view engine' 'jade'
 
-  app.set 'views' './server/views'
+    ..set 'views' path.join ...<[ .. server views ]>
 
 
-  app.use express.cookieParser!
-  app.use express.urlencoded!
-  app.use express.json!
-  app.use express.methodOverride!
+    ..use express.cookieParser!
+    ..use express.urlencoded!
+    ..use express.json!
+    ..use express.methodOverride!
 
-  app.use express-promise!
+    ..use express-promise!
 
-  app
+createServer <<< express{'static'}

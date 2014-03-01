@@ -17,22 +17,17 @@ head
   meta(name='viewport', content='width=device-width, initial-scale=1')
   //- TODO : Place favicon.ico and apple-touch-icon.png in the root directory
   block css
-    link(rel='stylesheet', href='css/normalize.css')
-    link(rel='stylesheet', href='css/main.css')
+    link(rel='stylesheet', href='./application.css')
   block top-script
     script(src='js/vendor/modernizr-2.6.2.min.js')
 body
   //-
     Add your site or application content here
   block main
-    p Hello world! This is HTML5 Boilerplate.
+    h1 Hello world! This is HTML5 Boilerplate.
 
   block bottom-script
-    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
-    script.
-      window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')
-    script(src='js/plugins.js')
-    script(src='js/main.js')
+    script(src='./application.js')
     //- TODO : Google Analytics: change UA-XXXXX-X to be your site\'s ID.
     script.
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

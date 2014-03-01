@@ -4,8 +4,8 @@ require! {
   Q: q
 }
 require! {
-  './config/express'
-  './config/sequelize'
+  '../config/express'
+  '../config/sequelize'
 }
 
 const app = express!
@@ -24,7 +24,7 @@ function traverse (base)
 
 Q.all [
   sequelize.authenticate!
-  traverse './server/routes'
+  traverse './routes'
 ]
 .then ->
   
@@ -32,10 +32,10 @@ Q.all [
   app.use app.router
 
   # app.use express.favicon!
-  # app.use express.static
+  app.use express.static path.join ...<[ .. public ]>
+  app.use express.static path.join ...<[ .. tmp public ]>
 
-
-
+  console.log 'express started at 5000'
   app.listen 5000
 
 .fail -> console.log it

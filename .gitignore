@@ -16,3 +16,7 @@ results
 
 npm-debug.log
 node_modules
+
+### Project ###
+bower_components
+tmp
