@@ -1,41 +1,41 @@
 require! {
-  # Sequelize: sequelize
+  fs
+  path
   Q: q
-  express
-  'express-promise'
-  './server/controllers'
+}
+require! {
+  './config/express'
+  './config/sequelize'
 }
 
-# const sequelize = new Sequelize 'npmgems', void, void, do
-#   dialect: 'postgres'
-#   port: 5432
+const app = express!
 
-# sequelize.authenticate!then ->
-#   return it if it
+function traverse (base)
+  <- Q.nfcall fs.readdir, base .then
+
+  Q.all it.map (route) ->
+    const newPath = "#base#{ path.sep }#route"
+    (stat) <- Q.nfcall fs.stat, newPath .then
+    if stat.isDirectory! and 'middlewares' isnt route
+      return traverse newPath
+    if stat.isFile!
+      require(newPath)(app)
+    stat
+
+Q.all [
+  sequelize.authenticate!
+  traverse './server/routes'
+]
+.then ->
+  
+
+  app.use app.router
+
+  # app.use express.favicon!
+  # app.use express.static
 
 
-#   const User = sequelize.define 'User' do
-#     email: Sequelize.STRING
-#     password: Sequelize.STRING
 
-#   Q.all [
-#     User.sync force: true
-#   ]
-
-# .then ([User]) ->
-
-#   User.build do
-#     email: 'developer@tomchentw.com'
-#     password: 'secure password'
-#   .save!
-#   .then (user) ->
-#     console.log user 
-
-Q.when express!
-.then (app) ->
-  app.use express-promise!
-
-  app
-.then controllers
-.then !(app) ->
   app.listen 5000
+
+.fail -> console.log it

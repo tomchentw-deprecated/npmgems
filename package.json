@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/**/*.ls --compilers ls:LiveScript"
+    "test": "mocha test/**/*.ls --compilers ls:LiveScript",
+    "develop": "lsc index.ls"
   },
   "author": "",
   "license": "ISC",
@@ -15,7 +16,8 @@
     "q": "^1.0.0",
     "npm": "^1.4.4",
     "express": "^3.4.8",
-    "express-promise": "^0.1.9"
+    "express-promise": "^0.1.9",
+    "jade": "^1.2.0"
   },
   "devDependencies": {
     "mocha": "^1.17.1",

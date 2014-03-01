@@ -1,10 +1,14 @@
 require! {
-  Q: q
-  './search'
+  Mapping: '../models/mapping'
+  User: '../models/user'
 }
 
+exports.render = (req, res) ->
 
-module.exports = (app) ->
-  search app
+  res.render 'index.jade'
 
-  app
+exports.debug = (req, res) ->
+
+  res.json do
+    mappings: Mapping.all!
+    user: User.all!
