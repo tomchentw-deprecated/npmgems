@@ -7,12 +7,12 @@ doctype html
 //if IE 8
   |<html class="no-js lt-ie9">
 //if gt IE 8
-  |<!--><html class="no-js"><!--
+  |<!--><html ng-app="npmgems" class="no-js"><!--
 head
   //- TODO: Check if it's the good charset
   meta(charset='utf-8')
   meta(http-equiv='X-UA-Compatible', content='IE=edge')
-  title
+  title NpmGems
   meta(name='description', content='')
   meta(name='viewport', content='width=device-width, initial-scale=1')
   //- TODO : Place favicon.ico and apple-touch-icon.png in the root directory
@@ -25,6 +25,23 @@ body
     Add your site or application content here
   block main
     h1 Hello world! This is HTML5 Boilerplate.
+
+    ul.unstyled(ng-controller="MappingsCtrl")
+      li(ng-repeat="mapping in mappings")
+        | {{mapping.gems}} 
+        strong Ruby Gems
+        |  - 
+        strong Npm Packages 
+        | {{mapping.npm}}
+
+    form(role='form' ng-controller="SearchCtrl as search" ng-submit="search.connect(gems, npm)")
+      .form-group
+        label(for="search_gems_input") RubyGems
+        input#search_gems_input.form-control(type="text" ng-model="gems" typeahead="gem as gem.name for gem in search.gems($viewValue)" typeahead-wait-ms="1000")
+      .form-group
+        label(for="search_npm_input") Npm Packages
+        input#search_npm_input.form-control(type="text" ng-model="npm" typeahead="npm as npm.name for npm in search.npm($viewValue)" typeahead-wait-ms="1000")
+      button.btn.btn-default(type="submit") Connenct!
 
   block bottom-script
     script(src='./application.js')

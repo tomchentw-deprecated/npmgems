@@ -1,4 +1,4 @@
-require! <[ path express express-promise jade ]>
+require! <[ express express-promise jade ]>
 
 module.exports = createServer
 
@@ -10,7 +10,7 @@ function createServer
 
     ..set 'view engine' 'jade'
 
-    ..set 'views' path.join ...<[ .. server views ]>
+    ..set 'views' './server/views'
 
 
     ..use express.cookieParser!

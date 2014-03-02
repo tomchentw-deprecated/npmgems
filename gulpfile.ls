@@ -1,120 +1,122 @@
-require! <[ fs path temp ]>
-require! <[ gulp gulp-util gulp-exec gulp-rename gulp-header gulp-concat ]>
-require! <[ gulp-livescript gulp-uglify gulp-ruby-sass gulp-jade ]>
-require! <[ connect connect-livereload tiny-lr  ]>
-require! <[ gulp-livereload gulp-bump gulp-conventional-changelog ]>
+require! <[ fs path tiny-lr ]>
+require! <[ gulp gulp-livescript gulp-uglify gulp-ruby-sass ]>
+require! <[ gulp-livereload gulp-exec gulp-header gulp-concat ]>
+
+require! {
+  Q: q
+  './config/express'
+  './config/sequelize'
+}
 
 const PROJECT_NAME = getJsonFile!name
 
 function getJsonFile
   fs.readFileSync 'package.json', 'utf-8' |> JSON.parse
 
+function getHeaderStream
+  const jsonFile = getJsonFile!
+  const date = new Date
+  gulp-header """
+/*! #{ PROJECT_NAME } - v #{ jsonFile.version } - #{ date }
+ * #{ jsonFile.homepage }
+ * Copyright (c) #{ date.getFullYear! } [#{ jsonFile.author.name }](#{ jsonFile.author.url });
+ * Licensed [#{ jsonFile.license.type }](#{ jsonFile.license.url })
+ */\n
+"""
+
+function traverse (base)
+  <- Q.nfcall fs.readdir, base .then
+
+  Q.all it.map (route) ->
+    const newPath = "#base#{ path.sep }#route"
+    (stat) <- Q.nfcall fs.stat, newPath .then
+    if stat.isDirectory! and 'middlewares' isnt route
+      return traverse newPath
+    if stat.isFile!
+      require(newPath)(app)
+    stat
 /*
  * test tasks
  */
-gulp.task 'test:protractor' ->
+gulp.task 'test:karma' ->
   stream = gulp.src 'package.json'
+  .pipe gulp-exec('karma start test/karma.js')
   
-  # stream.=pipe gulp-exec [
-  #   'cd test/scenario-rails'
-  #   'bundle install'
-  #   'RAILS_ENV=test rake db:drop db:migrate'
-  #   'rails s -d -e test -p 2999'
-  #   'cd ../..'
-  # ].join ' && ' unless process.env.TRAVIS
-  
-  stream.=pipe gulp-exec("protractor #{ path.join ...<[ test protractor.js ]> }")
-  # stream.=pipe gulp-exec('kill $(lsof -i :2999 -t)') unless process.env.TRAVIS
+  if process.env.TRAVIS
+    const TO_COVERALLS = [
+      "find #{ path.join ...<[ tmp coverage ]> } -name lcov.info -follow -type f -print0"
+      'xargs -0 cat'
+      path.join ...<[ node_modules .bin coveralls ]>
+    ].join ' | '
+    stream.=pipe gulp-exec(TO_COVERALLS)
   
   return stream
 /*
- * server...s
+ * app tasks
  */
-const server = connect!
-server.use connect-livereload!
-server.use connect.static 'public'
-server.use connect.static path.join ...<[ tmp public ]>
+gulp.task 'client:css' ->
+  return gulp.src 'client/stylesheets/application.scss'
+  .pipe gulp-ruby-sass do
+    loadPath: [
+      'bower_components/twbs-bootstrap-sass/vendor/assets/stylesheets'
+    ]
+    cacheLocation: 'tmp/.sass-cache'
+    style: if 'production' is process.env then 'compressed' else 'nested'
+  .pipe gulp.dest 'tmp/public'
 
-const livereload = tiny-lr!
+gulp.task 'client:js:ls' ->
+  stream = gulp.src 'client/javascripts/application.ls'
+  .pipe gulp-livescript!
+  .pipe gulp-concat 'application.js'
+  stream.=pipe gulp-uglify! if 'production' is process.env
+
+  return stream.pipe getHeaderStream!
+  .pipe gulp.dest 'tmp/.ls-cache'
+
+gulp.task 'client:js' <[ client:js:ls ]> ->
+  return gulp.src [
+    'bower_components/angular/angular.min.js'
+    # 'bower_components angular-sanitize angular-sanitize.min.js ]>
+    'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
+    'tmp/.ls-cache/*'
+  ]
+  .pipe gulp-concat 'application.js'
+  .pipe gulp.dest 'tmp/public'
+
+gulp.task 'client:all' <[ client:css client:js ]>
+
+gulp.task 'client:develop' <[ client:all ]> ->
+  gulp.watch 'client/javascripts/**/*.ls' <[ client:js ]>
+  gulp.watch 'client/stylesheets/**/*.scss' <[ client:css ]>
+
+gulp.task 'develop' <[ client:develop ]> ->
+  function watchForLR ({path})
+    gulp.src path .pipe gulp-livereload(livereload)
+
+  gulp.watch 'tmp/public/**/*' watchForLR
+  gulp.watch 'server/views/**/*' watchForLR
 /*
- * Public tasks: 
  *
- * test, develop
  */
-const appAndTest = <[ app:html app:css app:js test ]>
+const livereload  = tiny-lr!
+const app         = express!
 
-gulp.task 'test' <[ test:karma test:protractor ]>
+Q.all [
+  sequelize.authenticate!
+  traverse "./server/routes"
+]
+.then ->
+  
 
-gulp.task 'develop' appAndTest, !->
-  server.listen 5000
+  app.use app.router
+
+  # app.use express.favicon!
+  app.use express.static './public'
+  app.use express.static './tmp/public'
+
+  console.log 'express started at 5000'
+  app.listen 5000
   livereload.listen 35729
 
-  gulp.watch path.join(...<[ app views ** * ]>), <[ app:html ]>
-  gulp.watch path.join(...<[ app assets javascripts ** * ]>), <[ app:js ]>
-  gulp.watch path.join(...<[ app assets stylesheets ** * ]>), <[ app:css ]>
-
-  gulp.watch path.join(...<[ lib ** * ]>), <[ test:karma app:js ]>
-
-gulp.task 'release' <[ release:git release:rubygems ]>
-
-gulp.task 'release:app' appAndTest, (cb) ->
-  const {version} = getJsonFile!
-
-  (err, dirpath) <-! temp.mkdir PROJECT_NAME
-  return cb err if err
-  gulp.src 'package.json'
-  .pipe gulp-exec "cp -r #{ path.join ...<[ public * ]> } #{ dirpath }"
-  .pipe gulp-exec "cp -r #{ path.join ...<[ tmp public * ]> } #{ dirpath }"
-  .pipe gulp-exec 'git checkout gh-pages'
-  .pipe gulp-exec 'git clean -f -d'
-  .pipe gulp-exec 'git rm -rf .'
-  .pipe gulp-exec "cp -r #{ path.join dirpath, '*' } ."
-  .pipe gulp-exec "rm -rf #{ dirpath }"
-  .pipe gulp-exec 'git add -A'
-  .pipe gulp-exec "git commit -m 'chore(release): tomchentw/#{ PROJECT_NAME }@v#{ version }'"
-  .pipe gulp-exec 'git push'
-  .pipe gulp-exec 'git checkout master'
-  .on 'end' cb
-/*
- * Public tasks end 
- *
- * release tasks
- */
-gulp.task 'release:bump' ->
-  return gulp.src <[
-    package.json
-    bower.json
-  ]>
-  .pipe gulp-bump gulp-util.env{type or 'patch'}
-  .pipe gulp.dest '.'
-
-gulp.task 'release:lib' <[ release:bump ]> ->
-  return gulp.src LIB_FILE
-  .pipe gulp-livescript!
-  .pipe getHeaderStream!
-  .pipe gulp.dest path.join ...<[ vendor assets javascripts ]>
-  .pipe gulp.dest '.'
-  .pipe gulp-uglify preserveComments: 'some'
-  .pipe gulp-rename extname: '.min.js'
-  .pipe gulp.dest '.'
-
-gulp.task 'release:commit' <[ release:lib ]> ->
-  const jsonFile = getJsonFile!
-  const commitMsg = "chore(release): v#{ jsonFile.version }"
-
-  return gulp.src <[ package.json CHANGELOG.md ]>
-  .pipe gulp-conventional-changelog!
-  .pipe gulp.dest '.'
-  .pipe gulp-exec('git add -A')
-  .pipe gulp-exec("git commit -m '#{ commitMsg }'")
-  .pipe gulp-exec("git tag -a v#{ jsonFile.version } -m '#{ commitMsg }'")
-
-gulp.task 'release:git' <[ release:commit ]> ->
-  return gulp.src 'package.json'
-  .pipe gulp-exec('git push')
-  .pipe gulp-exec('git push --tags')
-
-gulp.task 'release:rubygems' <[ release:commit ]> ->
-  return gulp.src 'package.json'
-  .pipe gulp-exec('rake release')
+.fail -> console.log it
 
