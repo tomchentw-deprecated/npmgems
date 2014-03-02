@@ -41,6 +41,11 @@ angular.module 'npmgems' <[
 
   SearchCtrl.$inject = <[ $scope Gems Npm Mapping ]>
 
+  const prototype = SearchCtrl::
+
+  prototype.withAuthorName = (gems) ->
+    "#{ gems.authors }/#{ gems.name }"
+
   !function SearchCtrl ($scope, Gems, Npm, Mapping)
     @gems = Gems.search
     @npm = Npm.search

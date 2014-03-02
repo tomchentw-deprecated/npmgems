@@ -40,19 +40,36 @@ body
 
             
 
-    form.row(role='form' ng-controller="SearchCtrl as search" ng-submit="search.connect(gems, npm)")
-      .col-xs-12.col-sm-6
-        .form-group
-          label(for="search_gems_input") RubyGems
-          input#search_gems_input.form-control(type="text" ng-model="gems" typeahead-template-url="_package.html"
-            typeahead="gem as gem.name for gem in search.gems($viewValue)" typeahead-wait-ms="300")
-      .col-xs-12.col-sm-6
-        .form-group
-          label(for="search_npm_input") Npm Packages
-          input#search_npm_input.form-control(type="text" ng-model="npm" typeahead-template-url="_package.html"
-            typeahead="npm as npm.name for npm in search.npm($viewValue)" typeahead-wait-ms="300")
-      .col-xs-12
+    form#mappings_list.row(role='form' ng-controller="SearchCtrl as search" ng-submit="search.connect(gems, npm)")
+      .col-xs-12.col-sm-5
+        .panel.panel-default
+          .panel-heading
+            h3
+              span.label.label-default Ruby Gems
+              input.gems-name(type="text" ng-model="gems" required
+                typeahead-editable="false" typeahead-wait-ms="500"
+                typeahead="gem as search.withAuthorName(gem) for gem in search.gems($viewValue)")
+              a.gems-name(ng-show="gems" ng-href="https://rubygems.org/gems/{{ gems.name }}" target="_blank")
+                span.glyphicon.glyphicon-link
+
+          .panel-body {{gems.info}}
+
+      .col-xs-12.col-sm-2
         button.btn.btn-default(type="submit") Connenct!
+
+      .col-xs-12.col-sm-5
+        .panel.panel-default
+          .panel-heading.clearfix
+            h3.pull-right
+              a.npm-name(ng-show="npm" ng-href="https://www.npmjs.org/package/{{ npm.name }}" target="_blank")
+                span.glyphicon.glyphicon-link
+              input.npm-name(type="text" ng-model="npm" required
+                typeahead-editable="false" typeahead-wait-ms="300"
+                typeahead="npm as search.withAuthorName(npm) for npm in search.npm($viewValue)")
+              span.label.label-info Npm Packages
+
+          .panel-body {{npm.description}}
+
 
   block bottom-script
     script(src='./application.js')
