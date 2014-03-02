@@ -5,15 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test/**/*.ls --compilers ls:LiveScript",
-    "develop": "lsc index.ls"
+    "develop": "gulp develop --require LiveScript",
+    "postinstall": "bower install"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "LiveScript": "^1.2.0",
-    "sequelize": "^1.7.0",
-    "pg": "^2.11.1",
     "q": "^1.0.0",
+    "pg": "^2.11.1",
+    "sequelize": "^1.7.0",
     "npm": "^1.4.4",
     "express": "^3.4.8",
     "express-promise": "^0.1.9",
@@ -27,10 +28,13 @@
     "gulp-ruby-sass": "^0.3.1"
   },
   "devDependencies": {
+    "bower": "^1.2.8",
     "mocha": "^1.17.1",
-    "should": "^3.1.3",
     "mocha-as-promised": "^2.0.0",
+    "should": "^3.1.3",
     "tiny-lr": "0.0.5",
-    "gulp-livereload": "^1.2.0"
+    "gulp-livereload": "^1.2.0",
+    "gulp-jade": "^0.4.2",
+    "gulp-angular-templatecache": "^1.1.0"
   }
 }

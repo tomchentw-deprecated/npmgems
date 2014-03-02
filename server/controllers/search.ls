@@ -4,7 +4,9 @@ require! {
 }
 
 exports.npm = !(req, res) ->
-  res.json npm.search req.params.keyword
+  res.json do
+    results: npm.search req.params.keyword
 
 exports.gems = !(req, res) ->
-  res.json gems.search req.params.keyword
+  res.json do
+    results: gems.search req.params.keyword

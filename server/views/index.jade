@@ -26,27 +26,38 @@ body
   block main
     h1 Hello world! This is HTML5 Boilerplate.
 
-    ul.unstyled(ng-controller="MappingsCtrl")
+    ul#mappings_list.list-unstyled(ng-controller="MappingsCtrl")
       li(ng-repeat="mapping in mappings")
-        | {{mapping.gems}} 
-        strong Ruby Gems
-        |  - 
-        strong Npm Packages 
-        | {{mapping.npm}}
+        .panel.panel-default
+          .panel-heading
+            h3
+              span.label.label-default Ruby Gems
+              a.gems-name(ng-href="https://rubygems.org/gems/{{ mapping.gems }}" target="_blank") {{mapping.gems}} 
+              span.pull-right.label.label-info Npm Packages
+              a.pull-right.npm-name(ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank")  {{mapping.npm}}
+          .panel-body
+            .row
 
-    form(role='form' ng-controller="SearchCtrl as search" ng-submit="search.connect(gems, npm)")
-      .form-group
-        label(for="search_gems_input") RubyGems
-        input#search_gems_input.form-control(type="text" ng-model="gems" typeahead="gem as gem.name for gem in search.gems($viewValue)" typeahead-wait-ms="1000")
-      .form-group
-        label(for="search_npm_input") Npm Packages
-        input#search_npm_input.form-control(type="text" ng-model="npm" typeahead="npm as npm.name for npm in search.npm($viewValue)" typeahead-wait-ms="1000")
-      button.btn.btn-default(type="submit") Connenct!
+            
+
+    form.row(role='form' ng-controller="SearchCtrl as search" ng-submit="search.connect(gems, npm)")
+      .col-xs-12.col-sm-6
+        .form-group
+          label(for="search_gems_input") RubyGems
+          input#search_gems_input.form-control(type="text" ng-model="gems" typeahead-template-url="_package.html"
+            typeahead="gem as gem.name for gem in search.gems($viewValue)" typeahead-wait-ms="300")
+      .col-xs-12.col-sm-6
+        .form-group
+          label(for="search_npm_input") Npm Packages
+          input#search_npm_input.form-control(type="text" ng-model="npm" typeahead-template-url="_package.html"
+            typeahead="npm as npm.name for npm in search.npm($viewValue)" typeahead-wait-ms="300")
+      .col-xs-12
+        button.btn.btn-default(type="submit") Connenct!
 
   block bottom-script
     script(src='./application.js')
-    //- TODO : Google Analytics: change UA-XXXXX-X to be your site\'s ID.
     script.
+      //- TODO : Google Analytics: change UA-XXXXX-X to be your site\'s ID.
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
       function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
       e=o.createElement(i);r=o.getElementsByTagName(i)[0];

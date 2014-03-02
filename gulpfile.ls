@@ -1,6 +1,6 @@
 require! <[ fs path tiny-lr ]>
-require! <[ gulp gulp-livescript gulp-uglify gulp-ruby-sass ]>
-require! <[ gulp-livereload gulp-exec gulp-header gulp-concat ]>
+require! <[ gulp gulp-livescript gulp-uglify gulp-jade gulp-angular-templatecache ]>
+require! <[ gulp-ruby-sass gulp-livereload gulp-exec gulp-header gulp-concat ]>
 
 require! {
   Q: q
@@ -30,10 +30,8 @@ function traverse (base)
   Q.all it.map (route) ->
     const newPath = "#base#{ path.sep }#route"
     (stat) <- Q.nfcall fs.stat, newPath .then
-    if stat.isDirectory! and 'middlewares' isnt route
-      return traverse newPath
-    if stat.isFile!
-      require(newPath)(app)
+    return traverse newPath if stat.isDirectory! and 'middlewares' isnt route
+    require(newPath)(app) if stat.isFile!
     stat
 /*
  * test tasks
@@ -64,6 +62,14 @@ gulp.task 'client:css' ->
     style: if 'production' is process.env then 'compressed' else 'nested'
   .pipe gulp.dest 'tmp/public'
 
+gulp.task 'client:template' ->
+  return gulp.src 'client/templates/**/*.jade'
+  .pipe gulp-jade pretty: 'production' isnt process.env
+  .pipe gulp-angular-templatecache do
+    module: "#PROJECT_NAME.templates"
+    standalone: true
+  .pipe gulp.dest 'tmp/.ls-cache'
+
 gulp.task 'client:js:ls' ->
   stream = gulp.src 'client/javascripts/application.ls'
   .pipe gulp-livescript!
@@ -73,7 +79,7 @@ gulp.task 'client:js:ls' ->
   return stream.pipe getHeaderStream!
   .pipe gulp.dest 'tmp/.ls-cache'
 
-gulp.task 'client:js' <[ client:js:ls ]> ->
+gulp.task 'client:js' <[ client:template client:js:ls ]> ->
   return gulp.src [
     'bower_components/angular/angular.min.js'
     # 'bower_components angular-sanitize angular-sanitize.min.js ]>
@@ -86,7 +92,10 @@ gulp.task 'client:js' <[ client:js:ls ]> ->
 gulp.task 'client:all' <[ client:css client:js ]>
 
 gulp.task 'client:develop' <[ client:all ]> ->
-  gulp.watch 'client/javascripts/**/*.ls' <[ client:js ]>
+  gulp.watch <[
+    client/javascripts/**/*.ls
+    client/templates/**/*.jade
+  ]> <[ client:js ]>
   gulp.watch 'client/stylesheets/**/*.scss' <[ client:css ]>
 
 gulp.task 'develop' <[ client:develop ]> ->
