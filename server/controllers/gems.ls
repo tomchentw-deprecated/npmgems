@@ -8,4 +8,4 @@ exports.search = !(req, res) ->
 
 exports.info = !(req, res) ->
   res.json do
-    results: gems.info req.params.name
+    result: gems.info req.params.name

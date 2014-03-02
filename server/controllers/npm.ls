@@ -8,4 +8,4 @@ exports.search = !(req, res) ->
 
 exports.info = !(req, res) ->
   res.json do
-    results: npm.info req.params.name
+    result: npm.info req.params.name

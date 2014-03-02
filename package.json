@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test/**/*.ls --compilers ls:LiveScript",
-    "develop": "gulp develop --require LiveScript",
+    "develop": "NODE_ENV=development gulp develop --require LiveScript",
     "postinstall": "bower install"
   },
   "author": "",

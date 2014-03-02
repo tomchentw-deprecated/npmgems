@@ -35,8 +35,12 @@ angular.module 'npmgems.mappings' <[]>
     "#{ gems.authors }/#{ gems.name }"
 
   !function Ctrl ($scope, Gems, Npm, Mapping)
-    @gems = Gems.search
-    @npm = Npm.search
+    @gems = (name) ->
+      Gems.info name .then !($scope.gems) ->
+
+    @npm = (name) ->
+      Npm.info name .then !($scope.npm) ->
+
     @connect = Mapping.create
 
 

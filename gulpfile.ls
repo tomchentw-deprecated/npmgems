@@ -24,6 +24,18 @@ function getHeaderStream
  */\n
 """
 
+function database
+  sequelize
+  .authenticate!
+  # .then -> sequelize.sync force: true
+  .then runPendingMigrations
+
+function runPendingMigrations
+  sequelize.getMigrator do
+    path: "#{ process.cwd! }/config/migrations"
+    filesFilter: /\.ls$/
+  .migrate!
+
 function traverse (base)
   <- Q.nfcall fs.readdir, base .then
 
@@ -113,7 +125,7 @@ const livereload  = tiny-lr!
 const app         = express!
 
 Q.all [
-  sequelize.authenticate!
+  database!
   traverse "./server/routes"
 ]
 .then ->

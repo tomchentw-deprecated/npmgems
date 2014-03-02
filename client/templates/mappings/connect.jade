@@ -4,9 +4,8 @@ form#mappings_list.row(role='form' ng-submit="create.connect(gems, npm)")
       .panel-heading
         h3
           span.label.label-default Ruby Gems
-          input.gems-name(type="text" ng-model="gems" required
-            typeahead-editable="false" typeahead-wait-ms="500"
-            typeahead="gem as create.withAuthorName(gem) for gem in create.gems($viewValue)")
+          input.gems-name(type="text" ng-model="gemsName" required
+            ng-change="create.gems(gemsName)")
           a.gems-name(ng-show="gems" ng-href="https://rubygems.org/gems/{{ gems.name }}" target="_blank")
             span.glyphicon.glyphicon-link
 
@@ -21,9 +20,8 @@ form#mappings_list.row(role='form' ng-submit="create.connect(gems, npm)")
         h3.pull-right
           a.npm-name(ng-show="npm" ng-href="https://www.npmjs.org/package/{{ npm.name }}" target="_blank")
             span.glyphicon.glyphicon-link
-          input.npm-name(type="text" ng-model="npm" required
-            typeahead-editable="false" typeahead-wait-ms="300"
-            typeahead="npm as create.withAuthorName(npm) for npm in create.npm($viewValue)")
+          input.npm-name(type="text" ng-model="npmName" required
+            ng-change="create.npm(npmName)")
           span.label.label-info Npm Packages
 
       .panel-body {{npm.description}}

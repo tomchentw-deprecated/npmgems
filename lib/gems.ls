@@ -15,6 +15,6 @@ module.exports = do
 
   info: (name) ->
     Q.nfcall child_process.exec, rbCommand do
-      "Gems.info('#{ keyword }')"
+      "Gems.info('#{ name }')"
       "slice('name', 'authors', 'info')"
     .spread JSON.parse
