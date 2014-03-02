@@ -4,6 +4,12 @@ $icon-font-path: 'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/';
 
 body { padding-top: 70px; }
 
+.index {
+  .pkg-name {
+    margin: 0 .5em 0 .5em;
+  }
+}
+
 #mappings_list {
   .gems-name { margin-left: .5em; }
   .npm-name { margin-right: .5em; }

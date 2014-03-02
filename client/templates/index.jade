@@ -1,1 +1,17 @@
-h1 Index
+.index.jumbotron
+  .container
+    h1 NPM <-> RubyGems
+    p Find the recommended corresponding NPM packages by RubyGems
+
+    form.form-inline(role='form')
+      .form-group
+        label
+          | Find your
+          span.pkg-name {{index.targetText()}}
+          | by
+        input.pkg-name(type="text" ng-model="name" ng-attr-placeholder="{{index.sourcePlaceholder()}}")
+
+      button.btn.btn-primary.btn-lg Go
+      a(ng-click="index.toggleViceVersa()") vice versa!
+
+

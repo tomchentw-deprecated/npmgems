@@ -96,7 +96,7 @@ gulp.task 'client:js' <[ client:template client:js:ls ]> ->
   return gulp.src [
     'bower_components/angular/angular.min.js'
     # 'bower_components angular-sanitize angular-sanitize.min.js ]>
-    'bower_components/angular-ui-router/release/angular-ui-router.min.js'
+    'client/javascripts/vendor/angular-ui-router.min.js'
     'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
     'tmp/.ls-cache/*'
   ]
