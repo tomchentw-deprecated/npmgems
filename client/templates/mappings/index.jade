@@ -1,0 +1,11 @@
+ul#mappings_list.list-unstyled
+  li(ng-repeat="mapping in mappings")
+    .panel.panel-default
+      .panel-heading
+        h3
+          span.label.label-default Ruby Gems
+          a.gems-name(ng-href="https://rubygems.org/gems/{{ mapping.gems }}" target="_blank") {{mapping.gems}} 
+          span.pull-right.label.label-info Npm Packages
+          a.pull-right.npm-name(ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank")  {{mapping.npm}}
+      .panel-body
+        .row

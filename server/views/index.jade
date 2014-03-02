@@ -21,56 +21,8 @@ head
   block top-script
     script(src='js/vendor/modernizr-2.6.2.min.js')
 body
-  //-
-    Add your site or application content here
-  block main
-    h1 Hello world! This is HTML5 Boilerplate.
-
-    ul#mappings_list.list-unstyled(ng-controller="MappingsCtrl")
-      li(ng-repeat="mapping in mappings")
-        .panel.panel-default
-          .panel-heading
-            h3
-              span.label.label-default Ruby Gems
-              a.gems-name(ng-href="https://rubygems.org/gems/{{ mapping.gems }}" target="_blank") {{mapping.gems}} 
-              span.pull-right.label.label-info Npm Packages
-              a.pull-right.npm-name(ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank")  {{mapping.npm}}
-          .panel-body
-            .row
-
-            
-
-    form#mappings_list.row(role='form' ng-controller="SearchCtrl as search" ng-submit="search.connect(gems, npm)")
-      .col-xs-12.col-sm-5
-        .panel.panel-default
-          .panel-heading
-            h3
-              span.label.label-default Ruby Gems
-              input.gems-name(type="text" ng-model="gems" required
-                typeahead-editable="false" typeahead-wait-ms="500"
-                typeahead="gem as search.withAuthorName(gem) for gem in search.gems($viewValue)")
-              a.gems-name(ng-show="gems" ng-href="https://rubygems.org/gems/{{ gems.name }}" target="_blank")
-                span.glyphicon.glyphicon-link
-
-          .panel-body {{gems.info}}
-
-      .col-xs-12.col-sm-2
-        button.btn.btn-default(type="submit") Connenct!
-
-      .col-xs-12.col-sm-5
-        .panel.panel-default
-          .panel-heading.clearfix
-            h3.pull-right
-              a.npm-name(ng-show="npm" ng-href="https://www.npmjs.org/package/{{ npm.name }}" target="_blank")
-                span.glyphicon.glyphicon-link
-              input.npm-name(type="text" ng-model="npm" required
-                typeahead-editable="false" typeahead-wait-ms="300"
-                typeahead="npm as search.withAuthorName(npm) for npm in search.npm($viewValue)")
-              span.label.label-info Npm Packages
-
-          .panel-body {{npm.description}}
-
-
+  include _nav
+  ui-view
   block bottom-script
     script(src='./application.js')
     script.

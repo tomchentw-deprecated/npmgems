@@ -1,54 +1,28 @@
 angular.module 'npmgems' <[
   ui.bootstrap
+  ui.router
   npmgems.templates
+  npmgems.services
+  npmgems.mappings
 ]>
-.factory 'Gems' <[
-       $http
-]> ++ ($http) ->
+.config <[
+        $stateProvider  $locationProvider
+]> ++ !($stateProvider, $locationProvider) ->
+  $stateProvider
+  .state 'Index' do
+    url: '/'
+    templateUrl: '/index.html'
+    controller: 'IndexCtrl'
 
-  search: (keyword) ->
+  $locationProvider.html5Mode true
 
-    $http.get "/search/gems/#{ keyword }" .then ({data}) -> data.results
+.controller 'IndexCtrl'  do ->
 
-.factory 'Npm' <[
-       $http
-]> ++ ($http) ->
+  Ctrl.$inject = <[ $scope ]>
 
-  search: (keyword) ->
+  !function Ctrl ($scope)
+    void
 
-    $http.get "/search/npm/#{ keyword }" .then ({data}) -> data.results
 
-.factory 'Mapping' <[
-       $http
-]> ++ ($http) ->
 
-  list: ->
-    $http.get '/mappings' .then ({data}) -> data.results
 
-  create: (gems, npm) ->
-    $http.post '/mappings' {gems, npm}
-
-.controller 'MappingsCtrl' do ->
-
-  MappingsCtrl.$inject = <[ $scope Mapping ]>
-
-  !function MappingsCtrl ($scope, Mapping)
-    Mapping.list!then !($scope.mappings) ->
-
-  MappingsCtrl
-
-.controller 'SearchCtrl' do ->
-
-  SearchCtrl.$inject = <[ $scope Gems Npm Mapping ]>
-
-  const prototype = SearchCtrl::
-
-  prototype.withAuthorName = (gems) ->
-    "#{ gems.authors }/#{ gems.name }"
-
-  !function SearchCtrl ($scope, Gems, Npm, Mapping)
-    @gems = Gems.search
-    @npm = Npm.search
-    @connect = Mapping.create
-
-  SearchCtrl

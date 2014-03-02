@@ -66,12 +66,13 @@ gulp.task 'client:template' ->
   return gulp.src 'client/templates/**/*.jade'
   .pipe gulp-jade pretty: 'production' isnt process.env
   .pipe gulp-angular-templatecache do
+    root: '/'
     module: "#PROJECT_NAME.templates"
     standalone: true
   .pipe gulp.dest 'tmp/.ls-cache'
 
 gulp.task 'client:js:ls' ->
-  stream = gulp.src 'client/javascripts/application.ls'
+  stream = gulp.src 'client/javascripts/**/*.ls'
   .pipe gulp-livescript!
   .pipe gulp-concat 'application.js'
   stream.=pipe gulp-uglify! if 'production' is process.env
@@ -83,6 +84,7 @@ gulp.task 'client:js' <[ client:template client:js:ls ]> ->
   return gulp.src [
     'bower_components/angular/angular.min.js'
     # 'bower_components angular-sanitize angular-sanitize.min.js ]>
+    'bower_components/angular-ui-router/release/angular-ui-router.min.js'
     'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
     'tmp/.ls-cache/*'
   ]

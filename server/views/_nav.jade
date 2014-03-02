@@ -1,0 +1,17 @@
+nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
+  .container-fluid
+    .navbar-header
+      button.navbar-toggle(type='button' ng-click="isCollapsed = !isCollapsed")
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(ui-sref="Index") NpmGems
+    .navbar-collpase(collapse="isCollapsed")
+      ul.nav.navbar-nav
+        li(ui-sref-active="active")
+          a(ui-sref="Mapping.Index") Browse all mappings
+
+        li(ui-sref-active="active")
+          a(ui-sref="Mapping.Connect") Connect a mapping
+
+        
