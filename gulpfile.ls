@@ -125,6 +125,9 @@ Q.all [
   app.use express.static './public'
   app.use express.static './tmp/public'
 
+  app.use !(req, res) -> res.render 'index.jade'
+
+
   console.log 'express started at 5000'
   app.listen 5000
   livereload.listen 35729

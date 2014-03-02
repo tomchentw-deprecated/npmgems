@@ -13,18 +13,19 @@ head
   meta(charset='utf-8')
   meta(http-equiv='X-UA-Compatible', content='IE=edge')
   title NpmGems
+  base(href='/')
   meta(name='description', content='')
   meta(name='viewport', content='width=device-width, initial-scale=1')
   //- TODO : Place favicon.ico and apple-touch-icon.png in the root directory
   block css
-    link(rel='stylesheet', href='./application.css')
+    link(rel='stylesheet', href='/application.css')
   block top-script
     script(src='js/vendor/modernizr-2.6.2.min.js')
 body
   include _nav
   ui-view
   block bottom-script
-    script(src='./application.js')
+    script(src='/application.js')
     script.
       //- TODO : Google Analytics: change UA-XXXXX-X to be your site\'s ID.
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=

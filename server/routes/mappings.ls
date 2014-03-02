@@ -1,7 +1,9 @@
-require! '../controllers/mappings'
+require! {
+  '../controllers/mappings'
+}
 
 module.exports = !(app) ->
 
-  app.get '/mappings' mappings.list
+  app.get '/api/mappings' mappings.list
   
-  app.post '/mappings' mappings.create
+  app.post '/api/mappings' mappings.create

@@ -4,26 +4,30 @@ angular.module 'npmgems.services' <[]>
 ]> ++ ($http) ->
 
   search: (keyword) ->
+    $http.get "/api/gems/search/#{ keyword }" .then ({data}) -> data.results
 
-    $http.get "/search/gems/#{ keyword }" .then ({data}) -> data.results
+  info: (name) ->
+    $http.get "/api/gems/info/#{ name }" .then ({data}) -> data.result
 
 .factory 'Npm' <[
        $http
 ]> ++ ($http) ->
 
   search: (keyword) ->
+    $http.get "/api/npm/search/#{ keyword }" .then ({data}) -> data.results
 
-    $http.get "/search/npm/#{ keyword }" .then ({data}) -> data.results
+  info: (name) ->
+    $http.get "/api/npm/info/#{ name }" .then ({data}) -> data.result
 
 .factory 'Mapping' <[
        $http
 ]> ++ ($http) ->
 
   list: ->
-    $http.get '/mappings' .then ({data}) -> data.results
+    $http.get '/api/mappings' .then ({data}) -> data.results
 
   create: (gems, npm) ->
-    $http.post '/mappings' {gems, npm}
+    $http.post '/api/mappings' {gems, npm}
 
 
 
