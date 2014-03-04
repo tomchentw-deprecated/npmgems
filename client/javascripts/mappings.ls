@@ -8,17 +8,17 @@ angular.module 'npmgems.mappings' <[]>
     url: '/mappings'
     template: '<ui-view/>'
 
-  .state 'Mapping.Index' do
-    templateUrl: '/mappings/index.html'
-    controller: 'MappingIndexCtrl'
+  .state 'Mapping.List' do
+    templateUrl: '/mappings/list.html'
+    controller: 'MappingListCtrl'
     url: '/'
 
-  .state 'Mapping.Connect' do
-    templateUrl: '/mappings/connect.html'
+  .state 'Mapping.Create' do
+    templateUrl: '/mappings/create.html'
     controller: 'CreateMappingCtrl as create'
     url: '/connect'
 
-.controller 'MappingIndexCtrl' class
+.controller 'MappingListCtrl' class
 
   @$inject = <[ $scope Mapping ]>
 
@@ -27,17 +27,17 @@ angular.module 'npmgems.mappings' <[]>
 
 .controller 'CreateMappingCtrl' class
 
-  @$inject = <[ $scope Gems Npm Mapping ]>
-
   withAuthorName: (gems) ->
     "#{ gems.authors }/#{ gems.name }"
 
-  !($scope, Gems, Npm, Mapping) ->
-    @gems = (name) ->
-      Gems.info name .then !($scope.gems) ->
+  @$inject = <[ $scope $q Gems Npm Mapping ]>
 
-    @npm = (name) ->
-      Npm.info name .then !($scope.npm) ->
+  !($scope, $q, Gems, Npm, Mapping) ->
+    @info = (gemsName, npmName) ->
+      $q.all [
+        if gemsName then Gems.info gemsName .then !($scope.gems) ->
+        if npmName then Npm.info npmName .then !($scope.npm) ->
+      ]
 
     @connect = Mapping.create
 

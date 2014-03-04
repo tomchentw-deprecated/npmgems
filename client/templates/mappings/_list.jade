@@ -9,3 +9,9 @@ ul#mappings_list.list-unstyled
           a.pull-right.npm-name(ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank")  {{mapping.npm}}
       .panel-body
         .row
+          .col-xs-12.col-md-5
+            p {{mapping.gemsDesc}}
+          .col-md-2
+            button.btn.btn-default(type='button') I'm using this!
+          .col-xs-12.col-md-5
+            p {{mapping.npmDesc}}

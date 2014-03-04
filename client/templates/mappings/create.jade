@@ -1,0 +1,30 @@
+.container-fluid
+  .row
+    .col-xs-12
+      form#mappings_list.row(role='form' ng-submit="create.connect(gems, npm)")
+        .col-xs-12.col-sm-5
+          .panel.panel-default
+            .panel-heading
+              h3
+                span.label.label-default Ruby Gems
+                input.gems-name(type="text" ng-model="gemsName" required)
+                a.gems-name(ng-show="gems" ng-href="https://rubygems.org/gems/{{ gems.name }}" target="_blank")
+                  span.glyphicon.glyphicon-link
+
+            .panel-body {{gems.info}}
+
+        .col-xs-12.col-sm-2
+          button.btn.btn-default(type="button" ng-show="gemsName != gems.name || npmName != npm.name"
+            ng-click="create.info(gemsName, npmName)") Search
+          button.btn.btn-default(type="submit" ng-show="gems && npm") Connenct!
+
+        .col-xs-12.col-sm-5
+          .panel.panel-default
+            .panel-heading.clearfix
+              h3.pull-right
+                a.npm-name(ng-show="npm" ng-href="https://www.npmjs.org/package/{{ npm.name }}" target="_blank")
+                  span.glyphicon.glyphicon-link
+                input.npm-name(type="text" ng-model="npmName" required)
+                span.label.label-info Npm Packages
+
+            .panel-body {{npm.description}}

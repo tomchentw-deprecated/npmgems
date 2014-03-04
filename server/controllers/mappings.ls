@@ -16,7 +16,9 @@ exports.list = !(req, res) ->
 
 
 exports.create = !(req, res) ->
-  const {body} = req
+  const {gems, npm} = req.body
   res.json Mapping.create do
-    gems: body.gems.name
-    npm: body.npm.name
+    gems: gems.name
+    gemsDesc: gems.info
+    npm: npm.name
+    npmDesc: npm.description

@@ -5,4 +5,6 @@ require! {
 
 module.exports = sequelize.define 'Mapping' do
   npm: Sequelize.STRING
+  npmDesc: Sequelize.TEXT
   gems: Sequelize.STRING
+  gemsDesc: Sequelize.TEXT
