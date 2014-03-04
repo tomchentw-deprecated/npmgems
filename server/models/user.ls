@@ -5,4 +5,6 @@ require! {
 
 module.exports = sequelize.define 'User' do
   username: Sequelize.STRING
-  password: Sequelize.STRING
+  displayName: Sequelize.STRING
+  email: Sequelize.STRING
+  github: type: Sequelize.HSTORE

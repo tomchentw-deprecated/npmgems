@@ -1,5 +1,9 @@
 require! <[ express express-promise jade ]>
 
+require! {
+  './passport'
+}
+
 module.exports = createServer
 
 function createServer
@@ -19,5 +23,8 @@ function createServer
     ..use express.methodOverride!
 
     ..use express-promise!
+
+    ..use passport.initialize!
+    ..use passport.session!
 
 createServer <<< express{'static'}

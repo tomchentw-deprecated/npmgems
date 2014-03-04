@@ -20,12 +20,16 @@
     "express-promise": "^0.1.9",
     "jade": "^1.2.0",
     "gulp": "^3.5.2",
+    "gulp-jade": "^0.4.2",
+    "gulp-angular-templatecache": "^1.1.0",
     "gulp-exec": "^1.0.4",
     "gulp-header": "^1.0.2",
     "gulp-concat": "^2.1.7",
     "gulp-livescript": "^0.2.0",
     "gulp-uglify": "^0.2.1",
-    "gulp-ruby-sass": "^0.3.1"
+    "gulp-ruby-sass": "^0.3.1",
+    "passport": "^0.2.0",
+    "passport-github": "^0.1.5"
   },
   "devDependencies": {
     "bower": "^1.2.8",
@@ -33,8 +37,6 @@
     "mocha-as-promised": "^2.0.0",
     "should": "^3.1.3",
     "tiny-lr": "0.0.5",
-    "gulp-livereload": "^1.2.0",
-    "gulp-jade": "^0.4.2",
-    "gulp-angular-templatecache": "^1.1.0"
+    "gulp-livereload": "^1.2.0"
   }
 }
