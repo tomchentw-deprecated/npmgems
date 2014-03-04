@@ -9,9 +9,9 @@
           form.form-inline(role='form' name="searchForm")
             .form-group
               label
-                | Suggest me
+                | Suggest me some
                 span.pkg-name(ng-bind="index.targetText()")
-                | by
+                | by a
               input.pkg-name.form-control(type="text" ng-model="name"
                 ng-attr-placeholder="{{index.sourcePlaceholder()}}"
                 ng-change="search(name)")
