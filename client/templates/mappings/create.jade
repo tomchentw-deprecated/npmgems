@@ -11,7 +11,7 @@
                 a.gems-name(ng-show="gems" ng-href="https://rubygems.org/gems/{{ gems.name }}" target="_blank")
                   span.glyphicon.glyphicon-link
 
-            .panel-body {{gems.info}}
+            .panel-body(ng-bind-html="gems.info | linky")
 
         .col-xs-12.col-sm-2
           button.btn.btn-default(type="button" ng-show="gemsName != gems.name || npmName != npm.name"
@@ -27,4 +27,4 @@
                 input.npm-name(type="text" ng-model="npmName" required)
                 span.label.label-info Npm Packages
 
-            .panel-body {{npm.description}}
+            .panel-body(ng-bind-html="npm.description | linky")

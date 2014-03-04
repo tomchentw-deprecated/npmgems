@@ -1,6 +1,8 @@
 angular.module 'npmgems' <[
+  ngSanitize
   ui.bootstrap
   ui.router
+  angular.ujs
   npmgems.templates
   npmgems.services
   npmgems.mappings

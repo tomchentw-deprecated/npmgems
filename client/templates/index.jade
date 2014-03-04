@@ -17,10 +17,10 @@
                 ng-change="search(name)")
 
             //- button.btn.btn-primary.btn-lg(type="submit") Go
-            a#vice_versa(ng-click="index.toggleViceVersa()") vice versa!
+            a#vice_versa(ng-click="index.toggleViceVersa()") vice versa!  
 
           p(ng-show="!searchForm.$pristine && name.length > 0")
-            | Type more ... we're working
+            | Type more ... we're working ...
   .row
     .col-xs-12(ng-include="'/mappings/_list.html'")
       

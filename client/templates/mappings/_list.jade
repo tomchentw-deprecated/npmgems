@@ -10,8 +10,8 @@ ul#mappings_list.list-unstyled
       .panel-body
         .row
           .col-xs-12.col-md-5
-            p {{mapping.gemsDesc}}
+            p(ng-bind-html="mapping.gemsDesc | linky")
           .col-md-2
             button.btn.btn-default(type='button') I'm using this!
           .col-xs-12.col-md-5
-            p {{mapping.npmDesc}}
+            p(ng-bind-html="mapping.npmDesc | linky")

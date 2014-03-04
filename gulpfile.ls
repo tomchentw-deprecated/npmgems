@@ -27,7 +27,7 @@ function getHeaderStream
 function database
   sequelize
   .authenticate!
-  .then sequelize.sync.bind sequelize# force: true
+  .then sequelize.sync.bind sequelize, force: true
   .then runPendingMigrations
 
 function runPendingMigrations
@@ -95,8 +95,9 @@ gulp.task 'client:js:ls' ->
 gulp.task 'client:js' <[ client:template client:js:ls ]> ->
   return gulp.src [
     'bower_components/angular/angular.min.js'
-    # 'bower_components angular-sanitize angular-sanitize.min.js ]>
+    'bower_components/angular-sanitize/angular-sanitize.min.js'
     'client/javascripts/vendor/angular-ui-router.min.js'
+    'client/javascripts/vendor/angular-ujs.min.js'
     'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
     'tmp/.ls-cache/*'
   ]
@@ -108,6 +109,7 @@ gulp.task 'client:all' <[ client:css client:js ]>
 gulp.task 'client:develop' <[ client:all ]> ->
   gulp.watch <[
     client/javascripts/**/*.ls
+    client/javascripts/vendor/*.js
     client/templates/**/*.jade
   ]> <[ client:js ]>
   gulp.watch 'client/stylesheets/**/*.scss' <[ client:css ]>
@@ -130,7 +132,6 @@ Q.all [
 ]
 .then ->
   
-
   app.use app.router
 
   # app.use express.favicon!
