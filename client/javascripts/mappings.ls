@@ -18,23 +18,21 @@ angular.module 'npmgems.mappings' <[]>
     controller: 'CreateMappingCtrl as create'
     url: '/connect'
 
-.controller 'MappingIndexCtrl'  do ->
+.controller 'MappingIndexCtrl' class
 
-  Ctrl.$inject = <[ $scope Mapping ]>
+  @$inject = <[ $scope Mapping ]>
 
-  !function Ctrl ($scope, Mapping)
+  !($scope, Mapping) ->
     Mapping.list!then !($scope.mappings) ->
 
-.controller 'CreateMappingCtrl' do ->
+.controller 'CreateMappingCtrl' class
 
-  Ctrl.$inject = <[ $scope Gems Npm Mapping ]>
+  @$inject = <[ $scope Gems Npm Mapping ]>
 
-  const prototype = Ctrl::
-
-  prototype.withAuthorName = (gems) ->
+  withAuthorName: (gems) ->
     "#{ gems.authors }/#{ gems.name }"
 
-  !function Ctrl ($scope, Gems, Npm, Mapping)
+  !($scope, Gems, Npm, Mapping) ->
     @gems = (name) ->
       Gems.info name .then !($scope.gems) ->
 

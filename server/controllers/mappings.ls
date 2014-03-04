@@ -5,8 +5,15 @@ require! {
 }
 
 exports.list = !(req, res) ->
-  res.json do
-    results: Mapping.all!
+  const {sourceType, name} = req.query  
+  const results = if -1 is <[ npm gems ]>.indexOf sourceType
+    Mapping.all!
+  else
+    Mapping.findAll do
+      where: "#sourceType": name
+
+  res.json {results}
+
 
 exports.create = !(req, res) ->
   const {body} = req

@@ -23,8 +23,8 @@ angular.module 'npmgems.services' <[]>
        $http
 ]> ++ ($http) ->
 
-  list: ->
-    $http.get '/api/mappings' .then ({data}) -> data.results
+  list: (params) ->
+    $http.get '/api/mappings' {params} .then ({data}) -> data.results
 
   create: (gems, npm) ->
     $http.post '/api/mappings' {gems, npm}

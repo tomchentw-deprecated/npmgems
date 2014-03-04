@@ -16,26 +16,35 @@ angular.module 'npmgems' <[
 
   $locationProvider.html5Mode true
 
-.controller 'IndexCtrl' do ->
+.controller 'IndexCtrl' class
 
   const NPM_TEXT = 'NPM packages'
   const GEMS_TEXT = 'RubyGems'
 
-  Ctrl.$inject = <[ $scope ]>
 
-  const prototype = Ctrl::
-
-  prototype.targetText = ->
+  targetText: ->
     if @viceVersa then GEMS_TEXT else NPM_TEXT
 
-  prototype.sourcePlaceholder = ->
+  sourcePlaceholder: ->
     if @viceVersa then NPM_TEXT else GEMS_TEXT      
 
-  prototype.toggleViceVersa = !->
+  toggleViceVersa: !->
     @viceVersa = !@viceVersa
 
-  !function Ctrl ($scope)
+  search: (Mapping, name) ->
+    Mapping.list do
+      name: name
+      sourceType: if @viceVersa then 'npm' else 'gems'
+
+  @$inject = <[ $scope Mapping ]>
+
+  !($scope, Mapping) ->
     @viceVersa = false
+
+    $scope.search = (name) ~>
+      ($scope.mappings) <-! @search Mapping, name .then
+
+
 
 
 

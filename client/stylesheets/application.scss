@@ -4,9 +4,13 @@ $icon-font-path: 'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/';
 
 body { padding-top: 70px; }
 
-.index {
+#index {
   .pkg-name {
-    margin: 0 .5em 0 .5em;
+    padding: 0 .5em 0 .5em;
+  }
+
+  #vice_versa {
+    margin-left: 1em;
   }
 }
 

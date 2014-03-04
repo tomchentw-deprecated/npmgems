@@ -3,6 +3,8 @@ require! {
   Sequelize: sequelize
 }
 
-module.exports = new Sequelize 'npmgems', void, void, do
+const config = do
   dialect: 'postgres'
   port: 5432
+
+module.exports = new Sequelize 'npmgems', void, void, config

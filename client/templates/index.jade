@@ -1,17 +1,23 @@
-.index.jumbotron
-  .container
-    h1 NPM <-> RubyGems
-    p Find the recommended corresponding NPM packages by RubyGems
+#index.container-fluid
+  .row
+    .col-xs-12
+      .jumbotron
+        .container
+          h1 NPM <-> RubyGems
+          p Find the recommended corresponding NPM packages by RubyGems
 
-    form.form-inline(role='form')
-      .form-group
-        label
-          | Find your
-          span.pkg-name {{index.targetText()}}
-          | by
-        input.pkg-name(type="text" ng-model="name" ng-attr-placeholder="{{index.sourcePlaceholder()}}")
+          form.form-inline(role='form' ng-submit="search(name)")
+            .form-group
+              label
+                | Suggest me
+                span.pkg-name(ng-bind="index.targetText()")
+                | by
+              input.pkg-name.form-control(type="text" ng-model="name" ng-attr-placeholder="{{index.sourcePlaceholder()}}")
 
-      button.btn.btn-primary.btn-lg Go
-      a(ng-click="index.toggleViceVersa()") vice versa!
+            button.btn.btn-primary.btn-lg(type="submit") Go
+            a#vice_versa(ng-click="index.toggleViceVersa()") vice versa!
+  .row
+    .col-xs-12(ng-include="'/mappings/index.html'")
+      
 
 
