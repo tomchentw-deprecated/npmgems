@@ -1,0 +1,10 @@
+script.
+  angular.module('npmgems.bootstraping', []).factory('$bootstrapingCache',
+          ['$cacheFactory',
+  function ($cacheFactory) {
+    var bootstrapingCache = $cacheFactory('npmgems.bootstrapingCache');
+
+    bootstrapingCache.put('/users/_.json', !{ user  });
+
+    return bootstrapingCache;
+  }]);

@@ -12,12 +12,15 @@ module.exports = passport
 
 # Serialize the user id to push into the session
 passport.serializeUser !(user, done) ->
-  done null, user.id
+  done void, user.id
 
 # Deserialize the user object based on a pre-serialized token
  # which is the user id
 passport.deserializeUser !(id, done) ->
-  User.find id .then done
+  User
+    .find id
+    .error done
+    .then done.bind @, void
 
 
 # Use github strategy

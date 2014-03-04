@@ -4,8 +4,13 @@ require! {
 }
 
 exports.render = (req, res) ->
+  const safeUser = if req.user
+    that{id, username, displayName}
+  else
+    null
 
-  res.render 'index.jade'
+  res.render 'index' do
+    user: JSON.stringify safeUser
 
 exports.debug = (req, res) ->
 
