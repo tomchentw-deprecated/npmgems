@@ -1,8 +1,10 @@
 angular.module 'npmgems' <[
+  ngResource
   ngSanitize
   ui.bootstrap
   ui.router
   angular.ujs
+  npmgems.bootstraping
   npmgems.templates
   npmgems.services
   npmgems.mappings
@@ -17,6 +19,12 @@ angular.module 'npmgems' <[
     controller: 'IndexCtrl as index'
 
   $locationProvider.html5Mode true
+
+.run <[
+        $rootScope  User
+]> ++ !($rootScope, User) ->
+
+  $rootScope._ = User._
 
 .controller 'IndexCtrl' class
 

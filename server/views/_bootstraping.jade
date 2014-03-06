@@ -4,7 +4,7 @@ script.
   function ($cacheFactory) {
     var bootstrapingCache = $cacheFactory('npmgems.bootstrapingCache');
 
-    bootstrapingCache.put('/users/_.json', !{ user  });
+    bootstrapingCache.put('/api/users/_', !{ safeUser });
 
     return bootstrapingCache;
   }]);

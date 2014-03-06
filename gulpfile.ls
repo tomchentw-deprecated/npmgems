@@ -27,7 +27,7 @@ function getHeaderStream
 function database
   sequelize
   .authenticate!
-  .then sequelize.drop.bind sequelize
+  # .then sequelize.drop.bind sequelize
   .then sequelize.sync.bind sequelize
   .then runPendingMigrations
 
@@ -96,6 +96,7 @@ gulp.task 'client:js:ls' ->
 gulp.task 'client:js' <[ client:template client:js:ls ]> ->
   return gulp.src [
     'bower_components/angular/angular.min.js'
+    'bower_components/angular-resource/angular-resource.min.js'
     'bower_components/angular-sanitize/angular-sanitize.min.js'
     'client/javascripts/vendor/angular-ui-router.min.js'
     'client/javascripts/vendor/angular-ujs.min.js'
@@ -139,7 +140,7 @@ Q.all [
   app.use express.static './public'
   app.use express.static './tmp/public'
 
-  app.use !(req, res) -> res.render 'index.jade'
+  app.use !(req, res) -> res.render 'index.jade' res.bootstraping
 
 
   console.log 'express started at 5000'

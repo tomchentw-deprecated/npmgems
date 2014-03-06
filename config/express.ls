@@ -2,6 +2,7 @@ require! <[ express express-promise jade ]>
 
 require! {
   './passport'
+  '../server/routes/middlewares/bootstraping'
 }
 
 module.exports = createServer
@@ -27,5 +28,6 @@ function createServer
 
     ..use passport.initialize!
     ..use passport.session!
+    ..use bootstraping
 
 createServer <<< express{'static'}
