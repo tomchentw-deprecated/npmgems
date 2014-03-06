@@ -70,6 +70,7 @@ gulp.task 'client:css' ->
   .pipe gulp-ruby-sass do
     loadPath: [
       'bower_components/twbs-bootstrap-sass/vendor/assets/stylesheets'
+      'bower_components/animate-sass'
     ]
     cacheLocation: 'tmp/.sass-cache'
     style: if 'production' is process.env then 'compressed' else 'nested'
@@ -96,6 +97,7 @@ gulp.task 'client:js:ls' ->
 gulp.task 'client:js' <[ client:template client:js:ls ]> ->
   return gulp.src [
     'bower_components/angular/angular.min.js'
+    'bower_components/angular-animate/angular-animate.min.js'
     'bower_components/angular-resource/angular-resource.min.js'
     'bower_components/angular-sanitize/angular-sanitize.min.js'
     'client/javascripts/vendor/angular-ui-router.min.js'

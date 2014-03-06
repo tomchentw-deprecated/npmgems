@@ -1,4 +1,5 @@
 angular.module 'npmgems' <[
+  ngAnimate
   ngResource
   ngSanitize
   ui.bootstrap

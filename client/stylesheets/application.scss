@@ -1,7 +1,21 @@
 $icon-font-path: 'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/';
 
 @import "bootstrap";
+/*
+ * animate-sass
+ */
+$use-animation : false;
 
+$use-flipInY      : true;
+$use-flipOutY     : true;
+
+.ng-enter { @include animation(flipInY 1s); }
+.ng-leave { @include animation(flipOutY 1s); }
+
+@import "animate";
+/*
+ * app
+ */
 body { padding-top: 70px; }
 
 #index {
