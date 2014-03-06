@@ -4,7 +4,11 @@ require! {
 }
 
 module.exports = sequelize.define 'Mapping' do
-  npm: Sequelize.STRING
+  npm: do
+    type: Sequelize.STRING
+    unique: 'npm_and_gems'
   npmDesc: Sequelize.TEXT
-  gems: Sequelize.STRING
+  gems: do
+    type: Sequelize.STRING
+    unique: 'npm_and_gems'
   gemsDesc: Sequelize.TEXT

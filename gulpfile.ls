@@ -27,7 +27,8 @@ function getHeaderStream
 function database
   sequelize
   .authenticate!
-  .then sequelize.sync.bind sequelize#, force: true
+  .then sequelize.drop.bind sequelize
+  .then sequelize.sync.bind sequelize
   .then runPendingMigrations
 
 function runPendingMigrations
