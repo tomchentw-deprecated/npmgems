@@ -14,10 +14,10 @@
                 | by a
               input.pkg-name.form-control(type="text" ng-model="name"
                 ng-attr-placeholder="{{index.sourcePlaceholder()}}"
-                ng-change="search(name)")
+                ng-change="search()")
 
             //- button.btn.btn-primary.btn-lg(type="submit") Go
-            a#vice_versa(ng-click="index.toggleViceVersa()") vice versa!  
+            a#vice_versa(ng-click="viceVersa()") vice versa!  
 
           p(ng-show="!searchForm.$pristine && name.length > 0")
             | Type more ... we're working ...

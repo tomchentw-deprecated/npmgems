@@ -52,9 +52,12 @@ angular.module 'npmgems' <[
   !($scope, Mapping) ->
     @viceVersa = false
 
-    $scope.search = (name) ~>
-      ($scope.mappings) <-! @search Mapping, name .then
+    $scope.search = ~>
+      ($scope.mappings) <-! @search Mapping, $scope.name .then
 
+    $scope.viceVersa = !~>
+      @toggleViceVersa!
+      $scope.search!
 
 
 
