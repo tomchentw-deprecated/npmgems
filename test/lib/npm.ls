@@ -8,10 +8,9 @@ require! {
 @timeout 10000
 
 it 'should search npm registry' ->
-  <- npm.search 'gulp-livescript' .then 
+  <- npm.search 'gulp-livescript' .then
   pkg = it.0
 
   pkg.name.should.equal 'gulp-livescript'
-  pkg.maintainers.0.should.equal '=tomchentw'
   
   pkg

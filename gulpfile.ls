@@ -1,29 +1,108 @@
-require! <[ fs path tiny-lr ]>
-require! <[ gulp gulp-livescript gulp-uglify gulp-jade gulp-angular-templatecache ]>
-require! <[ gulp-ruby-sass gulp-livereload gulp-exec gulp-header gulp-concat ]>
+/*
+ * Only these tasks are exposed and should be used by Makefile/User
+ * Extract it out to the top
+ */
+!function tasksExportedForMakeFileDefinedHere
+  gulp.task 'client' <[ client:html client:css client:js ]>
 
+  gulp.task 'server' <[ client server:bootstraping ]> !->
+    server.listen SERVER_PORT
+    livereload.listen LIVERELOAD_PORT
+
+    server.use server.router
+
+    # server.use express.favicon!
+    server.use express.static './public'
+    server.use express.static './tmp/public'
+
+    server.use !(req, res) -> res.render 'index.jade' res.bootstraping
+
+
+    gulp.watch 'client/views/**/*', <[ client:html ]>
+    gulp.watch 'client/javascripts/**/*', <[ client:js ]>
+    gulp.watch 'client/stylesheets/**/*', <[ client:css ]>
+
+    console.log "started server(#SERVER_PORT), livereload(#LIVERELOAD_PORT) and watch"
+
+  gulp.task 'publish' <[ publish:changelog ]>
+/*
+ * Implementation details
+ *
+ * blabla....
+ */
 require! {
+  fs
+  path
   Q: q
   './config/express'
   './config/sequelize'
+  'connect-livereload'
+  'tiny-lr'
 }
+require! {
+  gulp
+  'gulp-util'
+  'gulp-livereload'
+  'gulp-jade'
+  'gulp-ruby-sass'
+  'gulp-angular-templatecache'
+  'gulp-uglify'
+  'gulp-livescript'
+  'gulp-concat'
+}
+/*
+ * client tasks
+ */
+gulp.task 'client:html' ->
+  return gulp.src 'client/views/index.jade'
+  .pipe gulp-jade pretty: 'production' isnt gulp-util.env.NODE_ENV
+  .pipe gulp.dest 'tmp/public'
+  .pipe gulp-livereload(livereload)
 
-const PROJECT_NAME = getJsonFile!name
+gulp.task 'client:css' ->
+  return gulp.src 'client/stylesheets/application.scss'
+  .pipe gulp-ruby-sass do
+    loadPath: [
+      path.join ...<[ bower_components twbs-bootstrap-sass vendor assets stylesheets ]>
+    ]
+    cacheLocation: 'tmp/.sass-cache'
+    style: if 'production' is gulp-util.env.NODE_ENV then 'compressed' else 'nested'
+  .pipe gulp.dest 'tmp/public'
+  .pipe gulp-livereload(livereload)
 
-function getJsonFile
-  fs.readFileSync 'package.json', 'utf-8' |> JSON.parse
+gulp.task 'client:template' ->
+  return gulp.src 'client/templates/**/*.jade'
+  .pipe gulp-jade pretty: 'production' isnt gulp-util.env.NODE_ENV
+  .pipe gulp-angular-templatecache do
+    root: '/'
+    module: 'npmgems.templates'
+    standalone: true
+  .pipe gulp.dest 'tmp/.js-cache'
 
-function getHeaderStream
-  const jsonFile = getJsonFile!
-  const date = new Date
-  gulp-header """
-/*! #{ PROJECT_NAME } - v #{ jsonFile.version } - #{ date }
- * #{ jsonFile.homepage }
- * Copyright (c) #{ date.getFullYear! } [#{ jsonFile.author.name }](#{ jsonFile.author.url });
- * Licensed [#{ jsonFile.license.type }](#{ jsonFile.license.url })
- */\n
-"""
+gulp.task 'client:js:ls' ->
+  stream = gulp.src 'client/javascripts/*.ls'
+  .pipe gulp-livescript!
+  .pipe gulp-concat 'application.js'
+  stream.=pipe gulp-uglify! if 'production' is gulp-util.env.NODE_ENV
+  stream.pipe gulp.dest 'tmp/.js-cache'
 
+gulp.task 'client:js' <[ client:template client:js:ls ]> ->
+  return gulp.src [
+    'bower_components/angular/angular.min.js'
+    'bower_components/angular-animate/angular-animate.min.js'
+    'bower_components/angular-resource/angular-resource.min.js'
+    'bower_components/angular-sanitize/angular-sanitize.min.js'
+    'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
+    'client/javascripts/vendor/angular-ui-router.min.js'
+    'client/javascripts/vendor/angular-ujs.min.js'
+    'tmp/.js-cache/*.js'
+  ]
+  .pipe gulp-concat 'application.js'
+  .pipe gulp.dest 'tmp/public'
+  .pipe gulp-livereload(livereload)
+/*
+ * server...s
+ */
 function database
   sequelize
   .authenticate!
@@ -44,110 +123,43 @@ function traverse (base)
     const newPath = "#base#{ path.sep }#route"
     (stat) <- Q.nfcall fs.stat, newPath .then
     return traverse newPath if stat.isDirectory! and 'middlewares' isnt route
-    require(newPath)(app) if stat.isFile!
+    require(newPath)(server) if stat.isFile!
     stat
-/*
- * test tasks
- */
-gulp.task 'test:karma' ->
-  stream = gulp.src 'package.json'
-  .pipe gulp-exec('karma start test/karma.js')
-  
-  if process.env.TRAVIS
-    const TO_COVERALLS = [
-      "find #{ path.join ...<[ tmp coverage ]> } -name lcov.info -follow -type f -print0"
-      'xargs -0 cat'
-      path.join ...<[ node_modules .bin coveralls ]>
-    ].join ' | '
-    stream.=pipe gulp-exec(TO_COVERALLS)
-  
-  return stream
-/*
- * app tasks
- */
-gulp.task 'client:css' ->
-  return gulp.src 'client/stylesheets/application.scss'
-  .pipe gulp-ruby-sass do
-    loadPath: [
-      'bower_components/twbs-bootstrap-sass/vendor/assets/stylesheets'
-      'bower_components/animate-sass'
-    ]
-    cacheLocation: 'tmp/.sass-cache'
-    style: if 'production' is process.env then 'compressed' else 'nested'
-  .pipe gulp.dest 'tmp/public'
 
-gulp.task 'client:template' ->
-  return gulp.src 'client/templates/**/*.jade'
-  .pipe gulp-jade pretty: 'production' isnt process.env
-  .pipe gulp-angular-templatecache do
-    root: '/'
-    module: "#PROJECT_NAME.templates"
-    standalone: true
-  .pipe gulp.dest 'tmp/.ls-cache'
+const SERVER_PORT = 5000
+const LIVERELOAD_PORT = 35729
 
-gulp.task 'client:js:ls' ->
-  stream = gulp.src 'client/javascripts/**/*.ls'
-  .pipe gulp-livescript!
-  .pipe gulp-concat 'application.js'
-  stream.=pipe gulp-uglify! if 'production' is process.env
+const server = express!
+server.use connect-livereload!
 
-  return stream.pipe getHeaderStream!
-  .pipe gulp.dest 'tmp/.ls-cache'
+const livereload = tiny-lr!
 
-gulp.task 'client:js' <[ client:template client:js:ls ]> ->
-  return gulp.src [
-    'bower_components/angular/angular.min.js'
-    'bower_components/angular-animate/angular-animate.min.js'
-    'bower_components/angular-resource/angular-resource.min.js'
-    'bower_components/angular-sanitize/angular-sanitize.min.js'
-    'client/javascripts/vendor/angular-ui-router.min.js'
-    'client/javascripts/vendor/angular-ujs.min.js'
-    'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
-    'tmp/.ls-cache/*'
+gulp.task 'server:bootstraping' ->
+  return Q.all [
+    database!
+    traverse './server/routes'
   ]
-  .pipe gulp-concat 'application.js'
-  .pipe gulp.dest 'tmp/public'
-
-gulp.task 'client:all' <[ client:css client:js ]>
-
-gulp.task 'client:develop' <[ client:all ]> ->
-  gulp.watch <[
-    client/javascripts/**/*.ls
-    client/javascripts/vendor/*.js
-    client/templates/**/*.jade
-  ]> <[ client:js ]>
-  gulp.watch 'client/stylesheets/**/*.scss' <[ client:css ]>
-
-gulp.task 'develop' <[ client:develop ]> ->
-  function watchForLR ({path})
-    gulp.src path .pipe gulp-livereload(livereload)
-
-  gulp.watch 'tmp/public/**/*' watchForLR
-  gulp.watch 'server/views/**/*' watchForLR
+  .fail console.log
 /*
- *
+ * publish tasks
  */
-const livereload  = tiny-lr!
-const app         = express!
+require! {
+  'gulp-bump'
+  'gulp-rename'
+  'gulp-conventional-changelog'
+}
 
-Q.all [
-  database!
-  traverse "./server/routes"
-]
-.then ->
-  
-  app.use app.router
+gulp.task 'publish:bump' ->
+  return gulp.src  <[
+    package.json
+    bower.json
+  ]>
+  .pipe gulp-bump gulp-util.env{type or 'patch'}
+  .pipe gulp.dest '.'
 
-  # app.use express.favicon!
-  app.use express.static './public'
-  app.use express.static './tmp/public'
-
-  app.use !(req, res) -> res.render 'index.jade' res.bootstraping
-
-
-  console.log 'express started at 5000'
-  app.listen 5000
-  livereload.listen 35729
-
-.fail -> console.log it
-
+gulp.task 'publish:changelog' <[ publish:bump ]> ->
+  return gulp.src <[ package.json CHANGELOG.md ]>
+  .pipe gulp-conventional-changelog!
+  .pipe gulp.dest '.'
+# define!
+tasksExportedForMakeFileDefinedHere!
