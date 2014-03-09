@@ -18,7 +18,7 @@
     server.use !(req, res) -> res.render 'index.jade' res.bootstraping
 
 
-    gulp.watch 'client/views/**/*', <[ client:html ]>
+    gulp.watch <[ client/views/**/* client/templates/**/* ]>, <[ client:html ]>
     gulp.watch 'client/javascripts/**/*', <[ client:js ]>
     gulp.watch 'client/stylesheets/**/*', <[ client:css ]>
 
@@ -70,7 +70,7 @@ gulp.task 'client:css' ->
   .pipe gulp.dest 'tmp/public'
   .pipe gulp-livereload(livereload)
 
-gulp.task 'client:template' ->
+gulp.task 'client:templates' ->
   return gulp.src 'client/templates/**/*.jade'
   .pipe gulp-jade pretty: 'production' isnt gulp-util.env.NODE_ENV
   .pipe gulp-angular-templatecache do
@@ -86,7 +86,7 @@ gulp.task 'client:js:ls' ->
   stream.=pipe gulp-uglify! if 'production' is gulp-util.env.NODE_ENV
   stream.pipe gulp.dest 'tmp/.js-cache'
 
-gulp.task 'client:js' <[ client:template client:js:ls ]> ->
+gulp.task 'client:js' <[ client:templates client:js:ls ]> ->
   return gulp.src [
     'bower_components/angular/angular.min.js'
     'bower_components/angular-animate/angular-animate.min.js'
