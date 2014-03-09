@@ -3,23 +3,24 @@
  * Extract it out to the top
  */
 !function tasksExportedForMakeFileDefinedHere
-  gulp.task 'client' <[ client:html client:css client:js ]>
+  gulp.task 'client' <[ client:css client:js ]>
 
   gulp.task 'server' <[ client server:bootstraping ]> !->
-    server.listen SERVER_PORT
-    livereload.listen LIVERELOAD_PORT
-
     server.use server.router
 
     # server.use express.favicon!
+    server.use connect-livereload!
     server.use express.static './public'
     server.use express.static './tmp/public'
-
+    
     server.use !(req, res) -> res.render 'index.jade' res.bootstraping
 
+    server.listen SERVER_PORT
+    livereload.listen LIVERELOAD_PORT
 
-    gulp.watch <[ client/views/**/* client/templates/**/* ]>, <[ client:html ]>
-    gulp.watch 'client/javascripts/**/*', <[ client:js ]>
+
+    gulp.watch 'client/views/**/*', <[ client:html ]>
+    gulp.watch <[ client/templates/**/* client/javascripts/**/* ]>, <[ client:js ]>
     gulp.watch 'client/stylesheets/**/*', <[ client:css ]>
 
     console.log "started server(#SERVER_PORT), livereload(#LIVERELOAD_PORT) and watch"
@@ -53,12 +54,6 @@ require! {
 /*
  * client tasks
  */
-gulp.task 'client:html' ->
-  return gulp.src 'client/views/index.jade'
-  .pipe gulp-jade pretty: 'production' isnt gulp-util.env.NODE_ENV
-  .pipe gulp.dest 'tmp/public'
-  .pipe gulp-livereload(livereload)
-
 gulp.task 'client:css' ->
   return gulp.src 'client/stylesheets/application.scss'
   .pipe gulp-ruby-sass do
@@ -130,8 +125,6 @@ const SERVER_PORT = 5000
 const LIVERELOAD_PORT = 35729
 
 const server = express!
-server.use connect-livereload!
-
 const livereload = tiny-lr!
 
 gulp.task 'server:bootstraping' ->
