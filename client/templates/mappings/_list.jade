@@ -2,16 +2,41 @@ ul#mappings_list.list-unstyled
   li(ng-repeat="mapping in mappings")
     .panel.panel-default
       .panel-heading
-        h3
-          span.label.label-default Ruby Gems
-          a.gems-name(ng-href="https://rubygems.org/gems/{{ mapping.gems }}" target="_blank") {{mapping.gems}} 
-          span.pull-right.label.label-info Npm Packages
-          a.pull-right.npm-name(ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank")  {{mapping.npm}}
+        h3.row
+          .col-xs-12.col-md-6
+            span.label.label-default Ruby Gems
+            a.gems-name(ng-href="https://rubygems.org/gems/{{ mapping.gems }}" target="_blank") {{mapping.gems}} 
+          .hidden-xs.hidden-sm.col-md-6
+            span.pull-right.label.label-info Npm Packages
+            a.pull-right.npm-name(ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank")  {{mapping.npm}}
       .panel-body
         .row
-          .col-xs-12.col-md-5
+          .col-xs-12.col-md-4
             p(ng-bind-html="mapping.gemsDesc | linky")
-          .col-md-2
-            button.btn.btn-default(type='button') I'm using this!
-          .col-xs-12.col-md-5
-            p(ng-bind-html="mapping.npmDesc | linky")
+          .commenter.col-xs-12.col-md-4.text-center
+            button.btn.btn-default(type='button' ng-click="state = 'positive'")
+              span.glyphicon.glyphicon-arrow-up
+              |  Works like a charm!
+            |  ... or 
+            a(ng-click="state = 'negative'")
+              | Nah 
+              span.glyphicon.glyphicon-arrow-down
+
+            form(role='form' name="commentForm" ng-controller="CreateCommentCtrl as create" ng-show="'positive' == state" ng-submit="create.commentOn(mapping, data)")
+              .form-group
+                label(for='comment_content') Reason?
+                textarea.form-control#comment_content(ng-model="data.content" placeholder="Optional")
+
+              a(ng-hide="commentForm.$pristine" ng-click="create.commentOn(mapping, data)") Ok, I'm done
+
+            p(ng-show="'negative' == state")
+              | Would you like to suggest a new mapping? 
+              a(ui-sref="Mapping.Create") Yes
+
+          .col-xs-12.col-md-4
+            p.text-right(ng-bind-html="mapping.npmDesc | linky")
+      .panel-footer.clearfix.visible-xs.visible-sm
+        h3.pull-right
+          a.npm-name(ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank")  {{mapping.npm}}
+          span.label.label-info Npm Packages
+    

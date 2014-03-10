@@ -17,6 +17,14 @@ body { padding-top: 70px; }
 }
 
 #mappings_list {
-  .gems-name { margin-left: .5em; }
-  .npm-name { margin-right: .5em; }
+  .panel-heading, .panel-footer {
+    a { margin: 0 .5em; }
+  }
+
+  .commenter {
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    p { margin-top: 10px; }
+  }
 }

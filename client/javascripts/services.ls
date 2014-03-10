@@ -64,5 +64,9 @@ angular.module 'npmgems.services' <[
   create: (gems, npm) ->
     $http.post '/api/mappings' {gems, npm}
 
+.factory 'Comment' <[
+       $http
+]> ++ ($http) ->
 
-
+  create: (data) ->
+    $http.post '/api/comments' data

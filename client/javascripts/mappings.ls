@@ -20,18 +20,20 @@ angular.module 'npmgems.mappings' <[]>
 
 .controller 'MappingListCtrl' class
 
-  @$inject = <[ $scope Mapping ]>
-
+  @$inject = <[ 
+    $scope  Mapping ]>
   !($scope, Mapping) ->
     Mapping.list!then !($scope.mappings) ->
+
+    @commentOn = angular.bind @, @commentOn, Comment
 
 .controller 'CreateMappingCtrl' class
 
   withAuthorName: (gems) ->
     "#{ gems.authors }/#{ gems.name }"
 
-  @$inject = <[ $scope $q Gems Npm Mapping ]>
-
+  @$inject = <[
+    $scope  $q  Gems  Npm  Mapping ]>
   !($scope, $q, Gems, Npm, Mapping) ->
     @info = (gemsName, npmName) ->
       $q.all [
@@ -41,6 +43,13 @@ angular.module 'npmgems.mappings' <[]>
 
     @connect = Mapping.create
 
+.controller 'CreateCommentCtrl' class
 
+  commentOn: (mapping, data) ->
+    data.mappingId = mapping.id
+    @_Comment.create data
 
+  @$inject = <[
+    $scope  Comment ]>
+  !($scope, @_Comment) ->
 
