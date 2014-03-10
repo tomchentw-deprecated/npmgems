@@ -1,19 +1,20 @@
-nav.navbar.navbar-default.navbar-fixed-top(role='navigation')
+header.navbar.navbar-default.navbar-fixed-top(role='navigation')
   .container-fluid
     .navbar-header
       button.navbar-toggle(type='button' ng-click="isCollapsed = !isCollapsed")
         span.icon-bar
         span.icon-bar
         span.icon-bar
-      a.navbar-brand(ui-sref="Index") NpmGems
-    .navbar-collpase(collapse="isCollapsed")
+      a.navbar-brand.visible-xs(role='button' ui-sref="Index") NpmGems
+    nav.hidden-xs
       ul.nav.navbar-nav
+        a.navbar-brand(role='button' ui-sref="Index") NpmGems
         li(ui-sref-active="active")
           a(ui-sref="Mapping.List") Browse all mappings
 
         li(ui-sref-active="active")
           a(ui-sref="Mapping.Create") Connect a mapping
-
+    nav.navbar-collapse(collapse="!isCollapsed")
       ul.nav.navbar-nav.navbar-right
         li(ng-if="_.id")
           a(target="_blank" ng-href="https://github.com/{{ _.username }}" ng-bind="_.displayName")
