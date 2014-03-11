@@ -7,10 +7,14 @@
     "postinstall": "bower install",
     "test": "make test"
   },
+  "engines": {
+    "node": "0.10.x"
+  },
   "author": "",
   "license": "private",
   "dependencies": {
     "LiveScript": "^1.2.0",
+    "bower": "^1.2.8",
     "q": "^1.0.0",
     "pg": "^2.11.1",
     "sequelize": "^1.7.0",
@@ -32,7 +36,6 @@
     "gulp-ruby-sass": "^0.3.1"
   },
   "devDependencies": {
-    "bower": "^1.2.8",
     "mocha": "^1.17.1",
     "mocha-as-promised": "^2.0.0",
     "should": "^3.1.3",
