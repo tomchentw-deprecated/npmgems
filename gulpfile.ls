@@ -121,7 +121,7 @@ function traverse (base)
     require(newPath)(server) if stat.isFile!
     stat
 
-const SERVER_PORT = 5000
+const SERVER_PORT = process.env.PORT or 5000
 const LIVERELOAD_PORT = 35729
 
 const server = express!
