@@ -25,8 +25,6 @@ angular.module 'npmgems.mappings' <[]>
   !($scope, Mapping) ->
     Mapping.list!then !($scope.mappings) ->
 
-    @commentOn = angular.bind @, @commentOn, Comment
-
 .controller 'CreateMappingCtrl' class
 
   withAuthorName: (gems) ->
@@ -45,11 +43,27 @@ angular.module 'npmgems.mappings' <[]>
 
 .controller 'CreateCommentCtrl' class
 
-  commentOn: (mapping, data) ->
-    data.mappingId = mapping.id
-    @_Comment.create data
+  saveComment: (mapping, comment) ->
+    comment.mappingId = mapping.id
+    comment.$save!
 
   @$inject = <[
     $scope  Comment ]>
   !($scope, @_Comment) ->
+
+    $scope.tooltipText = 'Please Sign In' unless $scope._.id
+    $scope.comment = new _Comment
+
+    $scope.saveComment = !(state) ~>
+      return unless $scope._.id
+      const {comment} = $scope
+
+      $scope.state = if 'negative' is state
+        comment.action = 'down'
+        state
+      else
+        comment.action = 'up'
+        'positive'
+      @saveComment $scope.mapping, comment
+
 

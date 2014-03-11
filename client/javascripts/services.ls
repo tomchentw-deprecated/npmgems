@@ -65,8 +65,8 @@ angular.module 'npmgems.services' <[
     $http.post '/api/mappings' {gems, npm}
 
 .factory 'Comment' <[
-       $http
-]> ++ ($http) ->
+       $resource
+]> ++ ($resource) ->
 
-  create: (data) ->
-    $http.post '/api/comments' data
+  const Comment = $resource '/api/comments/:commentId', {commentId: '@id'}
+

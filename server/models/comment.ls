@@ -14,6 +14,7 @@ const Comment = module.exports = sequelize.define 'Comment' do
     type: Sequelize.INTEGER
     references: User
     referencesKey: 'id'
+  action: Sequelize.ENUM(...<[ up down ]>)
   content: Sequelize.TEXT
 
 Comment.belongsTo User, as: 'author', foreignKey: 'AuthorId'

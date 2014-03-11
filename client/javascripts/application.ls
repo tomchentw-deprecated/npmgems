@@ -47,8 +47,8 @@ angular.module 'npmgems' <[
       name: name
       sourceType: if @viceVersa then 'npm' else 'gems'
 
-  @$inject = <[ $scope Mapping ]>
-
+  @$inject = <[
+    $scope  Mapping ]>
   !($scope, Mapping) ->
     @viceVersa = false
 
