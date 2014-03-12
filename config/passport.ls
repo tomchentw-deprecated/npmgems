@@ -15,19 +15,23 @@ passport.serializeUser !(user, done) ->
   done void, user.id
 
 # Deserialize the user object based on a pre-serialized token
- # which is the user id
+# which is the user id
 passport.deserializeUser !(id, done) ->
   User
     .find id
     .error done
     .then done.bind @, void
 
-
 # Use github strategy
 const config = do
   clientID:     '3e06d2279155f8910bae'
-  clientSecret: 'aa6afb6729ad1fc4d0fe1b801f8efd0602a503e3' #process.env.GITHUB_CLIENT_SECRET
+  clientSecret: 'aa6afb6729ad1fc4d0fe1b801f8efd0602a503e3'
   callbackURL:  'http://localhost:5000/users/auth/github/callback'
+
+if 'production' is process.env.NODE_ENV
+  config.clientID     = process.env.GITHUB_CALLBACK_URL
+  config.clientSecret = process.env.GITHUB_CLIENT_ID
+  config.callbackURL  = process.env.GITHUB_CLIENT_SECRET
 
 passport.use new GithubStrategy config, !(accessToken, refreshToken, profile, done) ->
   const userFetched = done.bind @, void
