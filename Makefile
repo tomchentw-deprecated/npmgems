@@ -1,10 +1,11 @@
 bin           := ./node_modules/.bin
 requireLS     := --require LiveScript
 install 			:= npm install
+clean					:= rm -rf node_modules bower_components tmp pkg
 
 tempFolder    := $(shell mktemp -d -t $(shell basename "$PWD"))
-releaseBranch := gh-pages
-developBranch := master
+releaseBranch := master
+developBranch := develop
 
 lastCommit    := $(shell git rev-parse --short=10 HEAD)
 newReleaseMsg := "chore(release): $(lastCommit) by Makefile"
@@ -18,7 +19,7 @@ install:
 	$(install)
 
 clean:
-	rm -rf node_modules bower_components tmp pkg
+	$(clean)
 
 client: install
 	$(bin)/gulp client $(requireLS)
@@ -53,8 +54,10 @@ test: test.mocha
 release: install
 	$(bin)/gulp client $(requireLS) --NODE_ENV=production
 
-	cp -r public/* $(tempFolder)
-	cp -r tmp/public/* $(tempFolder)
+	cp -r public $(tempFolder)
+	cp -r tmp/public/* $(tempFolder)/public
+	$(clean)
+	cp -r . $(tempFolder)
 	git checkout $(releaseBranch)
 
 	git clean -f -d
