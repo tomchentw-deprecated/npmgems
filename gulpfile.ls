@@ -42,13 +42,17 @@ require! {
   Q: q
   './config/express'
   './config/sequelize'
-  'connect-livereload'
-  'tiny-lr'
+  
 }
+unless 'production' is process.env.NODE_ENV
+  require! {
+    'tiny-lr'
+    'connect-livereload'
+    'gulp-livereload'
+  }
 require! {
   gulp
   'gulp-util'
-  'gulp-livereload'
   'gulp-jade'
   'gulp-ruby-sass'
   'gulp-angular-templatecache'
@@ -141,11 +145,12 @@ gulp.task 'server:bootstraping' ->
 /*
  * publish tasks
  */
-require! {
-  'gulp-bump'
-  'gulp-rename'
-  'gulp-conventional-changelog'
-}
+unless 'production' is process.env.NODE_ENV
+  require! {
+    'gulp-bump'
+    'gulp-rename'
+    'gulp-conventional-changelog'
+  }
 
 gulp.task 'publish:bump' ->
   return gulp.src  <[
