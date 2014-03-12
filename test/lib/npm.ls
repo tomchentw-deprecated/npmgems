@@ -7,10 +7,7 @@ require! {
 
 @timeout 10000
 
-it 'should search npm registry' ->
-  <- npm.search 'gulp-livescript' .then
-  pkg = it.0
-
-  pkg.name.should.equal 'gulp-livescript'
-  
-  pkg
+it 'should show info npm registry' ->
+  <- npm.info 'gulp-livescript' .then
+  it.name.should.equal 'gulp-livescript'
+  it

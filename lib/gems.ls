@@ -1,20 +1,18 @@
 require! {
   Q: q
-  child_process
+  request
 }
 
-function rbCommand (exec, map)
-  "ruby -r active_support/all -r gems -e \"puts #{ exec }.#{ map }.to_json\""
+function rubygemsUrl (name)
+  "https://rubygems.org/api/v1/gems/#name.json"
 
 module.exports = do
   search: (keyword) ->
-    Q.nfcall child_process.exec, rbCommand do
-      "Gems.search('#{ keyword }')"
-      "map { |h| h.slice('name', 'authors', 'info') }"
-    .spread JSON.parse
+    Q.reject 'not implemented'
 
   info: (name) ->
-    Q.nfcall child_process.exec, rbCommand do
-      "Gems.info('#{ name }')"
-      "slice('name', 'authors', 'info')"
-    .spread JSON.parse
+    Q.nfcall request, rubygemsUrl(name)
+    .spread (response, body) ->
+      JSON.parse body
+
+
