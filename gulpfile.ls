@@ -39,9 +39,6 @@ require! {
   fs
   path
   Q: q
-  './config/express'
-  './config/sequelize'
-  
 }
 
 require! {
@@ -113,14 +110,14 @@ gulp.task 'client:js' <[ client:templates client:js:ls ]> ->
 /*
  * server...s
  */
-function database
+function database (sequelize)
   sequelize
   .authenticate!
   # .then sequelize.drop.bind sequelize
   .then sequelize.sync.bind sequelize
-  # .then runPendingMigrations
+  # .then runPendingMigrations.bind sequelize
 
-function runPendingMigrations
+function runPendingMigrations (sequelize)
   sequelize.getMigrator do
     path: "#{ process.cwd! }/config/migrations"
     filesFilter: /\.ls$/
@@ -139,12 +136,19 @@ function traverse (base)
 const SERVER_PORT = process.env.PORT or 5000
 const LIVERELOAD_PORT = 35729
 
-const server = express!
-const livereload = !isProduction! and tiny-lr!
+express = void
+server = livereload = void
 
 gulp.task 'server:bootstraping' ->
+  express := require './config/express'
+  require! {
+    './config/sequelize'
+  }  
+  server      := express!
+  livereload  := !isProduction! and tiny-lr!
+
   return Q.all [
-    database!
+    database sequelize
     traverse './server/routes'
   ]
   .fail console.log
