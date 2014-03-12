@@ -103,7 +103,7 @@ function database
   .authenticate!
   # .then sequelize.drop.bind sequelize
   .then sequelize.sync.bind sequelize
-  .then runPendingMigrations
+  # .then runPendingMigrations
 
 function runPendingMigrations
   sequelize.getMigrator do
