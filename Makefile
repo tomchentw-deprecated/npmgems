@@ -64,6 +64,7 @@ release: install
 	git rm -rf .
 	cp -r $(tempFolder)/* .
 	rm -rf $(tempFolder)
+	rm -rf client
 
 	git add -A
 	git commit -m $(newReleaseMsg)
