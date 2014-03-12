@@ -14,6 +14,7 @@ exports.list = !(req, res) ->
       include: [
         model: User
         as: 'author'
+        attributes: User.permittedAttributes
       ]
     ]
 
