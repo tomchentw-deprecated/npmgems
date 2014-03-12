@@ -21,11 +21,8 @@ install:
 clean:
 	$(clean)
 
-client: install
-	$(bin)/gulp client $(requireLS)
-
 server: install
-	$(bin)/gulp server $(requireLS)
+	$(bin)/lsc index
 
 test.karma: install
 	$(bin)/karma start test/karma.js
@@ -52,7 +49,7 @@ test.mocha: install
 test: test.mocha
 
 release: install
-	NODE_ENV=production $(bin)/gulp client $(requireLS)
+	NODE_ENV=production $(bin)/lsc client
 
 	cp -r public $(tempFolder)
 	cp -r tmp/public/* $(tempFolder)/public
@@ -72,10 +69,6 @@ release: install
 
 	$(install)
 	echo "Release public(s) onto $(releaseBranch) branch but not pushed.\nCheck it out!"
-
-lib: install
-	$(bin)/gulp lib $(requireLS)
-	$(bin)/karma start --auto-watch --no-single-run test/karma.js
 
 publish.gulp: test
 	$(bin)/gulp publish $(requireLS)

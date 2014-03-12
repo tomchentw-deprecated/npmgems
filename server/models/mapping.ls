@@ -1,6 +1,6 @@
 require! {
   Sequelize: sequelize
-  '../../config/sequelize'
+  '../config/sequelize'
 }
 
 module.exports = sequelize.define 'Mapping' do

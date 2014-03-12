@@ -4,8 +4,9 @@ require! {
 }
 
 require! {
+  '../../config'
   './sequelize'
-  User: '../server/models/user'
+  User: '../models/user'
 }
 
 module.exports = passport
@@ -23,17 +24,17 @@ passport.deserializeUser !(id, done) ->
     .then done.bind @, void
 
 # Use github strategy
-const config = do
+const githubConfig = do
   clientID:     '3e06d2279155f8910bae'
   clientSecret: 'aa6afb6729ad1fc4d0fe1b801f8efd0602a503e3'
   callbackURL:  'http://localhost:5000/users/auth/github/callback'
 
-if 'production' is process.env.NODE_ENV
-  config.clientID     = process.env.GITHUB_CLIENT_ID
-  config.clientSecret = process.env.GITHUB_CLIENT_SECRET
-  config.callbackURL  = process.env.GITHUB_CALLBACK_URL
+if config.env.is 'production'
+  githubConfig.clientID     ||= process.env.GITHUB_CLIENT_ID
+  githubConfig.clientSecret ||= process.env.GITHUB_CLIENT_SECRET
+  githubConfig.callbackURL  ||= process.env.GITHUB_CALLBACK_URL
 
-passport.use new GithubStrategy config, !(accessToken, refreshToken, profile, done) ->
+passport.use new GithubStrategy githubConfig, !(accessToken, refreshToken, profile, done) ->
   const userFetched = done.bind @, void
 
   sequelize.query 'SELECT * FROM "Users" WHERE "Users"."github" @> \'id=>' + profile.id + '\'', User

@@ -1,6 +1,6 @@
 require! {
   Sequelize: sequelize
-  '../../config/sequelize'
+  '../config/sequelize'
 }
 
 const User = module.exports = sequelize.define 'User' do
