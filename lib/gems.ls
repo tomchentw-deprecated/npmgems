@@ -1,5 +1,5 @@
 require! {
-  Q
+  Q: q
   child_process
 }
 

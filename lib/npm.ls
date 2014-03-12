@@ -1,5 +1,5 @@
 require! {
-  Q
+  Q: q
 }
 
 const promise = Q.nfcall require('npm').load, {}
