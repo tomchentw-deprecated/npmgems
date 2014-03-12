@@ -52,7 +52,7 @@ test.mocha: install
 test: test.mocha
 
 release: install
-	$(bin)/gulp client $(requireLS) --NODE_ENV=production
+	NODE_ENV=production $(bin)/gulp client $(requireLS)
 
 	cp -r public $(tempFolder)
 	cp -r tmp/public/* $(tempFolder)/public

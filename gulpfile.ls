@@ -6,22 +6,21 @@
   gulp.task 'client' <[ client:css client:js ]>
 
   const serverTasks = <[ server:bootstraping ]>
-  unless 'production' is process.env.NODE_ENV
-    # We don't need to compile client files in server
-    serverTasks.push 'client'
+  # We don't need to compile client files in server
+  serverTasks.push 'client' unless isProduction!
 
   gulp.task 'server' serverTasks, !->
     server.use server.router
 
-    # server.use express.favicon!
-    server.use connect-livereload!
+    
+    server.use connect-livereload! unless isProduction!
     server.use express.static './public'
-    server.use express.static './tmp/public'
+    server.use express.static './tmp/public' unless isProduction!
     
     server.use !(req, res) -> res.render 'index.jade' res.bootstraping
 
     server.listen SERVER_PORT
-    livereload.listen LIVERELOAD_PORT
+    livereload.listen LIVERELOAD_PORT  unless isProduction!
 
 
     gulp.watch 'client/views/**/*', <[ client:html ]>
@@ -44,15 +43,9 @@ require! {
   './config/sequelize'
   
 }
-unless 'production' is process.env.NODE_ENV
-  require! {
-    'tiny-lr'
-    'connect-livereload'
-    'gulp-livereload'
-  }
+
 require! {
   gulp
-  'gulp-util'
   'gulp-jade'
   'gulp-ruby-sass'
   'gulp-angular-templatecache'
@@ -60,6 +53,18 @@ require! {
   'gulp-livescript'
   'gulp-concat'
 }
+
+function isProduction
+  'production' is process.env.NODE_ENV
+
+unless isProduction!
+  require! {
+    'tiny-lr'
+    'connect-livereload'
+    'gulp-livereload'
+  }
+else
+  gulp-livereload = -> gulp.dest 'tmp/ignore'
 /*
  * client tasks
  */
@@ -70,25 +75,26 @@ gulp.task 'client:css' ->
       path.join ...<[ bower_components twbs-bootstrap-sass vendor assets stylesheets ]>
     ]
     cacheLocation: 'tmp/.sass-cache'
-    style: if 'production' is gulp-util.env.NODE_ENV then 'compressed' else 'nested'
+    style: if isProduction! then 'compressed' else 'nested'
   .pipe gulp.dest 'tmp/public'
   .pipe gulp-livereload(livereload)
 
 gulp.task 'client:templates' ->
-  return gulp.src 'client/templates/**/*.jade'
-  .pipe gulp-jade pretty: 'production' isnt gulp-util.env.NODE_ENV
+  stream = gulp.src 'client/templates/**/*.jade'
+  .pipe gulp-jade pretty: !isProduction!
   .pipe gulp-angular-templatecache do
     root: '/'
     module: 'npmgems.templates'
     standalone: true
-  .pipe gulp.dest 'tmp/.js-cache'
+  stream.=pipe gulp-uglify! if isProduction!
+  return stream.pipe gulp.dest 'tmp/.js-cache'
 
 gulp.task 'client:js:ls' ->
   stream = gulp.src 'client/javascripts/*.ls'
   .pipe gulp-livescript!
   .pipe gulp-concat 'application.js'
-  stream.=pipe gulp-uglify! if 'production' is gulp-util.env.NODE_ENV
-  stream.pipe gulp.dest 'tmp/.js-cache'
+  stream.=pipe gulp-uglify! if isProduction!
+  return stream.pipe gulp.dest 'tmp/.js-cache'
 
 gulp.task 'client:js' <[ client:templates client:js:ls ]> ->
   return gulp.src [
@@ -134,7 +140,7 @@ const SERVER_PORT = process.env.PORT or 5000
 const LIVERELOAD_PORT = 35729
 
 const server = express!
-const livereload = tiny-lr!
+const livereload = !isProduction! and tiny-lr!
 
 gulp.task 'server:bootstraping' ->
   return Q.all [
@@ -145,8 +151,9 @@ gulp.task 'server:bootstraping' ->
 /*
  * publish tasks
  */
-unless 'production' is process.env.NODE_ENV
+unless isProduction!
   require! {
+    'gulp-util'
     'gulp-bump'
     'gulp-rename'
     'gulp-conventional-changelog'
