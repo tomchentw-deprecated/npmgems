@@ -29,9 +29,9 @@ const config = do
   callbackURL:  'http://localhost:5000/users/auth/github/callback'
 
 if 'production' is process.env.NODE_ENV
-  config.clientID     = process.env.GITHUB_CALLBACK_URL
-  config.clientSecret = process.env.GITHUB_CLIENT_ID
-  config.callbackURL  = process.env.GITHUB_CLIENT_SECRET
+  config.clientID     = process.env.GITHUB_CLIENT_ID
+  config.clientSecret = process.env.GITHUB_CLIENT_SECRET
+  config.callbackURL  = process.env.GITHUB_CALLBACK_URL
 
 passport.use new GithubStrategy config, !(accessToken, refreshToken, profile, done) ->
   const userFetched = done.bind @, void
