@@ -4,7 +4,6 @@
   "description": "NPM with RubyGems",
   "main": "index.js",
   "scripts": {
-    "postinstall": "bower install",
     "test": "make test",
     "start": "lsc server"
   },

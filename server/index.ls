@@ -1,6 +1,5 @@
 require! {
   express
-  'connect-livereload'
 }
 
 require! {
@@ -26,7 +25,10 @@ function runPendingMigrations
 <-! database!then
 server.use server.router
 
-server.use connect-livereload! unless config.env.is 'production'
+unless config.env.is 'production'
+  require! 'connect-livereload'
+  server.use connect-livereload!
+
 server.use express.static './public'
 server.use express.static './tmp/public'
 

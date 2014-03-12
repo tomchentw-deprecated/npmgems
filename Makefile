@@ -1,6 +1,7 @@
 bin           := ./node_modules/.bin
 requireLS     := --require LiveScript
-install 			:= npm install
+installNpm 		:= npm install
+installBower	:= $(bin)/bower install
 clean					:= rm -rf node_modules bower_components tmp pkg
 
 tempFolder    := $(shell mktemp -d -t $(shell basename "$PWD"))
@@ -16,7 +17,8 @@ newPublishMsg = "chore(publish): v$(version) by Makefile"
 .PHONY: client server lib test
 
 install:
-	$(install)
+	$(installNpm)
+	$(installBower)
 
 clean:
 	$(clean)
@@ -67,7 +69,8 @@ release: install
 	git commit -m $(newReleaseMsg)
 	git checkout $(developBranch)
 
-	$(install)
+	$(installNpm)
+	$(installBower)
 	echo "Release public(s) onto $(releaseBranch) branch but not pushed.\nCheck it out!"
 
 publish.gulp: test
