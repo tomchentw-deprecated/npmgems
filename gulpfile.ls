@@ -5,7 +5,12 @@
 !function tasksExportedForMakeFileDefinedHere
   gulp.task 'client' <[ client:css client:js ]>
 
-  gulp.task 'server' <[ client server:bootstraping ]> !->
+  const serverTasks = <[ server:bootstraping ]>
+  unless 'production' is process.env.NODE_ENV
+    # We don't need to compile client files in server
+    serverTasks.push 'client'
+
+  gulp.task 'server' serverTasks, !->
     server.use server.router
 
     # server.use express.favicon!
