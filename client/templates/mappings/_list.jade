@@ -34,6 +34,14 @@ ul#mappings_list.list-unstyled
               | Would you like to suggest a new mapping? 
               a(ui-sref="Mapping.Create") Yes
 
+            ul.media-list.text-left
+              li.media(ng-repeat="comment in mapping.comments")
+                a.pull-left
+                  img.media-object.img-rounded(ng-src="http://www.gravatar.com/avatar/{{ comment.author.gravatarId }}?s=50")
+                .media-body
+                  h4.media-heading {{ comment.author.displayName }}
+                  p {{ comment.content }}
+
           .col-xs-12.col-md-4
             p.text-right(ng-bind-html="mapping.npmDesc | linky")
       .panel-footer.clearfix.visible-xs.visible-sm

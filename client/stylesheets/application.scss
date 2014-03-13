@@ -29,6 +29,9 @@ body { padding-top: 70px; }
   .commenter {
     @extend %actor;
     p { margin-top: 10px; }
+    .media-list {
+      margin-top: 10px;
+    }
   }
 
   .searcher {

@@ -12,7 +12,7 @@
                   span.glyphicon.glyphicon-link
           .panel-body(ng-bind-html="gems.info | linky")
 
-      .searcher.col-xs-12.col-sm-4
+      .searcher.col-xs-12.col-sm-4.text-center
         button.btn.btn-default(type="button" ng-show="gemsName != gems.name || npmName != npm.name"
           ng-click="create.info(gemsName, npmName)") Search
         button.btn.btn-default(type="submit" ng-show="gems && npm") Connenct!

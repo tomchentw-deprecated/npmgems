@@ -35,19 +35,23 @@ if config.env.is 'production'
   githubConfig.callbackURL  ||= process.env.GITHUB_CALLBACK_URL
 
 passport.use new GithubStrategy githubConfig, !(accessToken, refreshToken, profile, done) ->
-  const userFetched = done.bind @, void
+  const userParam = do
+    username:     profile.username
+    displayName:  profile.displayName
+    gravatarId:   profile._json.gravatar_id
+    email:        profile.emails.0.value
+    github: do
+      id:           profile.id
+      accessToken:  accessToken
+      refreshToken: refreshToken
+
+  console.log 'userParam' userParam
 
   sequelize.query 'SELECT * FROM "Users" WHERE "Users"."github" @> \'id=>' + profile.id + '\'', User
   .error done
   .then (users) ->
-    return userFetched users.0 if users.length > 0
-
-    User.create do
-      username:     profile.username
-      displayName:  profile.displayName
-      email:        profile.emails.0.value
-      github: do
-        id:           profile.id
-        accessToken:  accessToken
-        refreshToken: refreshToken
-  .then userFetched
+    if users.length > 0
+      users.0.updateAttributes userParam
+    else
+      User.create userParam
+  .then done.bind @, void
