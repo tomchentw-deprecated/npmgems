@@ -30,9 +30,9 @@ const githubConfig = do
   callbackURL:  'http://localhost:5000/users/auth/github/callback'
 
 if config.env.is 'production'
-  githubConfig.clientID     ||= process.env.GITHUB_CLIENT_ID
-  githubConfig.clientSecret ||= process.env.GITHUB_CLIENT_SECRET
-  githubConfig.callbackURL  ||= process.env.GITHUB_CALLBACK_URL
+  githubConfig.clientID     = that if process.env.GITHUB_CLIENT_ID
+  githubConfig.clientSecret = that if process.env.GITHUB_CLIENT_SECRET
+  githubConfig.callbackURL  = that if process.env.GITHUB_CALLBACK_URL
 
 passport.use new GithubStrategy githubConfig, !(accessToken, refreshToken, profile, done) ->
   const userParam = do
@@ -44,8 +44,6 @@ passport.use new GithubStrategy githubConfig, !(accessToken, refreshToken, profi
       id:           profile.id
       accessToken:  accessToken
       refreshToken: refreshToken
-
-  console.log 'userParam' userParam
 
   sequelize.query 'SELECT * FROM "Users" WHERE "Users"."github" @> \'id=>' + profile.id + '\'', User
   .error done
