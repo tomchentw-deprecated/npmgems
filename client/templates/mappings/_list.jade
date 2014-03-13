@@ -15,20 +15,20 @@ ul#mappings_list.list-unstyled
             p(ng-bind-html="mapping.gemsDesc | linky")
           .commenter.col-xs-12.col-md-4.text-center(ng-controller="CreateCommentCtrl as create"
             tooltip="{{ tooltipText }}" tooltip-placement="top" tooltip-trigger="mouseenter")
-            button.btn.btn-default(type='button' ng-disabled="!_.id" ng-click="saveComment()")
+            button.btn.btn-default(type='button' ng-disabled="!_.id" ng-click="create.go('positive')")
               span.glyphicon.glyphicon-arrow-up
               |  Works like a charm!
             |  ... or 
-            a(ng-disabled="!_.id" ng-click="saveComment('negative')")
+            a(ng-disabled="!_.id" ng-click="create.go('negative')")
               | Nah 
               span.glyphicon.glyphicon-arrow-down
 
-            form(role='form' name="commentForm" ng-show="'positive' == state" ng-submit="saveComment()")
+            form(role='form' name="commentForm" ng-show="'positive' == state" ng-submit="create.go('positive')")
               .form-group
                 label(for='comment_content') Reason?
                 textarea.form-control#comment_content(ng-model="comment.content" placeholder="Optional")
 
-              a(ng-hide="commentForm.$pristine" ng-click="saveComment()") Ok, I'm done
+              a(ng-hide="commentForm.$pristine" ng-click="create.go('positive')") Ok, I'm done
 
             p(ng-show="'negative' == state")
               | Would you like to suggest a new mapping? 

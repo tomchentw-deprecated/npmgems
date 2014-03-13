@@ -55,11 +55,15 @@ angular.module 'npmgems.services' <[
   User
 
 .factory 'Mapping' <[
-       $http
-]> ++ ($http) ->
+       $http  Comment
+]> ++ ($http, Comment) ->
 
   list: (params) ->
-    $http.get '/api/mappings' {params} .then ({data}) -> data
+    $http.get '/api/mappings' {params}
+    .then ({data}) ->
+      for mapping in data when mapping.comments.length > 0
+        mapping.comments.=map -> new Comment it
+      data
 
   create: (gems, npm) ->
     $http.post '/api/mappings' {gems, npm}
@@ -69,4 +73,9 @@ angular.module 'npmgems.services' <[
 ]> ++ ($resource) ->
 
   const Comment = $resource '/api/comments/:commentId', {commentId: '@id'}
+  const prototype = Comment::
 
+  prototype.isNewRecord = -> !@id
+
+
+  Comment

@@ -43,27 +43,34 @@ angular.module 'npmgems.mappings' <[]>
 
 .controller 'CreateCommentCtrl' class
 
-  saveComment: (mapping, comment) ->
+  firstOrCreateComment: ->
+    for comment in @$scope.mapping.comments when comment.author.id is @$scope._.id
+      return comment
+    new @Comment
+
+  go: (state) ->
+    return unless @$scope._.id
+    const {comment, mapping} = @$scope
+    const isNewRecord = comment.isNewRecord!
+
+    @$scope.state = if 'negative' is state
+      comment.action = 'down'
+      state
+    else
+      comment.action = 'up'
+      'positive'
+
     comment.mappingId = mapping.id
-    comment.$save!
+    comment.$save!.then !->
+      mapping.comments.push comment if isNewRecord
 
   @$inject = <[
-    $scope  Comment ]>
-  !($scope, @_Comment) ->
+     $scope   Comment ]>
+  !(@$scope, @Comment) ->
 
     $scope.tooltipText = 'Please Sign In' unless $scope._.id
-    $scope.comment = new _Comment
 
-    $scope.saveComment = !(state) ~>
-      return unless $scope._.id
-      const {comment} = $scope
-
-      $scope.state = if 'negative' is state
-        comment.action = 'down'
-        state
-      else
-        comment.action = 'up'
-        'positive'
-      @saveComment $scope.mapping, comment
-
+    $scope.comment = @firstOrCreateComment!
+            
+          
 
