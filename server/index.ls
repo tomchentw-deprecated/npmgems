@@ -12,7 +12,7 @@ require! {
 function database
   sequelize
   .authenticate!
-  .then sequelize.drop.bind sequelize
+  # .then sequelize.drop.bind sequelize
   .then sequelize.sync.bind sequelize
   # .then runPendingMigrations
 

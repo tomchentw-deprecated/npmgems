@@ -27,6 +27,10 @@ angular.module 'npmgems' <[
 
   $rootScope._ = User._
 
+.filter 'gravatar' ->
+  (hash, size || 50) ->
+    "http://www.gravatar.com/avatar/#{ hash }?s=#{ size }"
+
 .controller 'IndexCtrl' class
 
   const NPM_TEXT = 'NPM packages'

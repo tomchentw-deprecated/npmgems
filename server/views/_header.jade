@@ -15,7 +15,9 @@ header.navbar.navbar-default.navbar-fixed-top(role='navigation')
           a(ui-sref="Mapping.Create") Connect a mapping
       ul.nav.navbar-nav.navbar-right
         li(ng-if="_.id")
-          a(target="_blank" ng-href="https://github.com/{{ _.username }}" ng-bind="_.displayName")
+          a(target="_blank" ng-href="https://github.com/{{ _.username }}")
+            img#gravatar(ng-src="{{ _.gravatarId | gravatar }}")
+            |  {{ _.displayName }}
         li
           a(ng-if="!_.id" href='/users/auth/github' target="_self") Github Login
           a(ng-if="_.id" href='/users/sign_out' data-method="delete" target="_self") Sign Out

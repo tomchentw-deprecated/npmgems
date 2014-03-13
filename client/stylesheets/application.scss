@@ -4,7 +4,17 @@ $icon-font-path: 'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/';
 /*
  * app
  */
-body { padding-top: 70px; }
+body {
+  padding-top: 70px;
+
+  > header {
+    #gravatar {
+      margin-top: -8px;
+      margin-bottom: -8px;
+      @include square(36px);
+    }
+  }
+}
 
 #index {
   .pkg-name {
