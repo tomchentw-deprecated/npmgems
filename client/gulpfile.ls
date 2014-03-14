@@ -1,5 +1,5 @@
 !function exportedTasksDefinedBeginsHere
-  gulp.task 'client' <[ client:css client:js ]> !->
+  gulp.task 'client' <[ client:html client:css client:js ]> !->
     return if config.env.is 'production'
     livereload.listen config.port.livereload
 
@@ -34,6 +34,12 @@ const livereload = tiny-lr!
 /*
  * client tasks
  */
+gulp.task 'client:html' ->
+  return gulp.src 'client/views/**/*.jade'
+  .pipe gulp-jade pretty: !config.env.is 'production'
+  .pipe gulp.dest 'tmp/public'
+  .pipe gulp-livereload(livereload)
+
 gulp.task 'client:css' ->
   return gulp.src 'client/stylesheets/application.scss'
   .pipe gulp-ruby-sass do
