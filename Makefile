@@ -53,11 +53,21 @@ test: test.mocha
 release: install
 	NODE_ENV=production $(bin)/lsc client
 
+	# if it's hosted on github only
+	#
+	# cp -r public/* $(tempFolder)
+	# cp -r tmp/public/* $(tempFolder)
+	# git checkout $(releaseBranch)
+	#
+	# else if it's hosted via express
+	#
 	cp -r public $(tempFolder)
 	cp -r tmp/public/* $(tempFolder)/public
 	$(clean)
 	cp -r . $(tempFolder)
 	git checkout $(releaseBranch)
+	#
+	# end if
 
 	git clean -f -d
 	git rm -rf .
@@ -72,6 +82,10 @@ release: install
 	$(installNpm)
 	$(installBower)
 	echo "Release public(s) onto $(releaseBranch) branch but not pushed.\nCheck it out!"
+
+# lib: install
+# 	$(bin)/gulp lib $(requireLS)
+# 	$(bin)/karma start --auto-watch --no-single-run test/karma.js
 
 publish.gulp: test
 	$(bin)/gulp publish $(requireLS)
@@ -90,4 +104,4 @@ publish.git: publish.gulp
 	git push --tags
 
 # you may customize yourself (adding npm ...etc)
-publish: publish.git
+publish: publish.git publish.gems
