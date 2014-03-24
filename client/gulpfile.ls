@@ -4,12 +4,13 @@
     livereload.listen config.port.livereload
 
     gulp.watch 'client/views/**/*', <[ client:html ]>
-    gulp.watch <[ client/templates/**/* client/javascripts/**/* ]>, <[ client:js ]>
+    gulp.watch <[ client/templates/**/* client/javascripts/**/* lib/javascripts/**/* ]>, <[ client:html client:js ]>
     gulp.watch 'client/stylesheets/**/*', <[ client:css ]>
 /*
  * Implementation details
  */
 require! {
+  fs
   path
 }
 require! {
@@ -24,6 +25,7 @@ require! {
   'gulp-livereload'
 }
 require! {
+  hljs: 'highlight.js'
   'tiny-lr'
   'connect-livereload'
 }
@@ -35,9 +37,27 @@ const livereload = tiny-lr!
 /*
  * client tasks
  */
-gulp.task 'client:html' ->
-  return gulp.src 'client/views/**/*.jade'
-  .pipe gulp-jade pretty: !config.env.is 'production'
+gulp.task 'client:html:partials' ->
+  return gulp.src 'client/views/partials/*.jade'
+  .pipe gulp-jade pretty: true
+  .pipe gulp.dest 'tmp/.html-cache/partials'
+
+gulp.task 'client:js:partials' ->
+  return gulp.src 'client/javascripts/partials/*.ls'
+  .pipe gulp-livescript bare: true
+  .pipe gulp.dest 'tmp/.js-cache/partials'
+
+gulp.task 'client:html' <[ client:html:partials client:js:partials ]> ->
+  return gulp.src 'client/views/*.jade'
+  .pipe gulp-jade do
+    pretty: !config.env.is 'production'
+    locals:
+      highlight: ->
+        hljs.highlight do
+          path.extname it .substr 1
+          fs.readFileSync it, 'utf8'
+        .value
+
   .pipe gulp.dest 'tmp/public'
   .pipe gulp-livereload(livereload)
 
@@ -51,12 +71,14 @@ gulp.task 'client:css:scss' ->
     style: if config.env.is 'production' then 'compressed' else 'nested'
   .pipe gulp.dest 'tmp/.css-cache'
 
-gulp.task 'client:css:angular-csp' ->
-  stream = gulp.src 'bower_components/angular/angular-csp.css'
+gulp.task 'client:css:bower_components' ->
+  stream = gulp.src <[
+    bower_components/angular/angular-csp.css
+  ]>
   stream.=pipe gulp-minify-css! if config.env.is 'production'
   return stream.pipe gulp.dest 'tmp/.css-cache'
 
-gulp.task 'client:css' <[ client:css:scss client:css:angular-csp ]> ->
+gulp.task 'client:css' <[ client:css:scss client:css:bower_components ]> ->
   return gulp.src 'tmp/.css-cache/*.css'
   .pipe gulp-concat 'application.css'
   .pipe gulp.dest 'tmp/public'
@@ -67,15 +89,18 @@ gulp.task 'client:templates' ->
   .pipe gulp-jade pretty: !config.env.is 'production'
   .pipe gulp-angular-templatecache do
     root: '/'
-    module: "#{ config.readJsonFile!name }.templates"
+    module: 'npmgems.templates'
     standalone: true
   stream.=pipe gulp-uglify! if config.env.is 'production'
   return stream.pipe gulp.dest 'tmp/.js-cache'
 
 gulp.task 'client:js:ls' ->
-  stream = gulp.src 'client/javascripts/*.ls'
-  .pipe gulp-livescript!
+  stream = gulp.src <[
+    client/javascripts/application.ls
+    client/javascripts/**/*.ls
+  ]>
   .pipe gulp-concat 'application.js'
+  .pipe gulp-livescript!
   stream.=pipe gulp-uglify! if config.env.is 'production'
   return stream.pipe gulp.dest 'tmp/.js-cache'
 
