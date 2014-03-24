@@ -2,13 +2,15 @@
   "name": "npmgems",
   "version": "0.0.1",
   "description": "NPM with RubyGems",
-  "main": "index.js",
-  "scripts": {
-    "start": "lsc server"
+  "main": "index.ls",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomchentw/npmgems"
   },
-  "engines": {
-    "node": "0.10.x"
-  },
+  "keywords": [
+    "npm",
+    "RubyGems"
+  ],
   "author": {
     "name": "tomchentw",
     "email": "developer@tomchentw.com",
@@ -22,6 +24,12 @@
     "url": "https://github.com/tomchentw/npmgems/issues"
   },
   "homepage": "https://github.com/tomchentw/npmgems",
+  "engines": {
+    "node": "0.10.x"
+  },
+  "scripts": {
+    "start": "lsc server"
+  },
   "dependencies": {
     "LiveScript": "^1.2.0",
     "bower": "^1.2.8",

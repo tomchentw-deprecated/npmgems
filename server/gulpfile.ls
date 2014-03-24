@@ -4,7 +4,6 @@ require! {
   express
 }
 require! {
-  '../client/gulpfile'
   '../config'
   './config/server'
   './config/routes'
@@ -24,8 +23,13 @@ function runPendingMigrations
     filesFilter: /\.ls$/
   .migrate!
 
+const serverTaskDependencies = unless config.env.is 'production'
+  require '../client/gulpfile'
+  <[ client ]>
+else
+  []
 
-gulp.task 'server' <[ client ]> !->
+gulp.task 'server' serverTaskDependencies, !->
   <- database!then
   server.use server.router
 

@@ -4,10 +4,16 @@
   "authors": [
     "tomchentw <developer@tomchentw.com>"
   ],
+  "description": "NPM with RubyGems",
+  "main": "index.ls",
+  "keywords": [
+    "npm",
+    "RubyGems"
+  ],
   "license": "MIT",
   "private": true,
   "ignore": [],
-  "dependencies": {
+  "devDependencies": {
     "angular": "~1.2.13",
     "angular-animate": "~1.2.14",
     "angular-sanitize": "~1.2.14",
