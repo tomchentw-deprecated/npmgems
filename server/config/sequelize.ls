@@ -12,7 +12,7 @@ const config = do
   protocol: 'postgres'
   port: 5432
 
-if process.env.HEROKU_POSTGRESQL_PURPLE_URL
+if process.env.DATABASE_URL
   const matchRes = that.match /postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/
 
   secret.name = matchRes.5

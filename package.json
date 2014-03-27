@@ -28,7 +28,7 @@
     "node": "0.10.x"
   },
   "scripts": {
-    "start": "lsc server"
+    "start": "lsc index"
   },
   "dependencies": {
     "LiveScript": "^1.2.0",
