@@ -18,7 +18,7 @@ newPublishMsg = "chore(publish): v$(version) by Makefile"
 
 install:
 	mkdir -p tmp
-	gem install sass
+	gem query sass --installed || gem install sass
 	npm install
 	$(bin)/bower install
 
