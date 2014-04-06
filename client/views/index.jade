@@ -5,10 +5,9 @@ html(ng-app="npmgems")
     base(href="/")
     title NpmGems
     meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0")
-    link(rel="stylesheet" href="/application.css")
+    link(rel="stylesheet" href=stylesheetLinkTag("application.css"))
+    script(type="text/javascript" defer src=javascriptIncludeTag("application.js"))
   body
     include partials/header
     div(role="main" ui-view)
     include partials/footer
-    script(type="text/javascript" src="/application.js")
-    include partials/bootstraping

@@ -1,6 +1,5 @@
 angular.module 'npmgems.services' <[
   ngResource
-  npmgems.bootstraping
 ]>
 .config <[
         $httpProvider
@@ -41,14 +40,13 @@ angular.module 'npmgems.services' <[
     $http.get "/api/npm/info/#{ name }" .then ({data}) -> data
 
 .factory 'User' <[
-       $resource  $bootstrapingCache
-]> ++ ($resource, $bootstrapingCache) ->
+       $resource
+]> ++ ($resource) ->
 
   const User = $resource '/api/users/:userId', {userId: '@id'}, do
     get: do
       method: 'GET'
       isArray: false
-      cache: $bootstrapingCache
 
   User._ = User.get userId: '_'
   

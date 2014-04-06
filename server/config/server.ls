@@ -1,17 +1,11 @@
-require! <[ express express-promise jade ]>
+require! <[ express express-promise ]>
 
 require! {
   './passport'
-  '../middlewares/bootstraping'
 }
 
 module.exports = express!
   ..set 'showStackError' true
-
-  ..engine 'jade' jade.__express
-  ..set 'view engine' 'jade'
-  ..set 'views' './server/views'
-
 
   ..use express.cookieParser!
   ..use express.urlencoded!
@@ -23,4 +17,3 @@ module.exports = express!
 
   ..use passport.initialize!
   ..use passport.session!
-  ..use bootstraping

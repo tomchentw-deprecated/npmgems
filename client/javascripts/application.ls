@@ -5,7 +5,6 @@ angular.module 'npmgems' <[
   ui.bootstrap
   ui.router
   angular.ujs
-  npmgems.bootstraping
   npmgems.templates
   npmgems.services
   npmgems.mappings

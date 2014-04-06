@@ -15,10 +15,10 @@ module.exports = ->
 
   server.use require('connect-livereload')! unless config.env.is 'production'
 
-  server.use express.static './public' maxAge: Infinity
-  server.use express.static './tmp/public' unless config.env.is 'production'
+  server.use express.static prefix = './public' maxAge: Infinity
+  server.use express.static prefix = './tmp/public' unless config.env.is 'production'
 
-  server.use !(req, res) -> res.render 'index.jade' res.bootstraping
+  server.use !(req, res) -> res.sendfile "#prefix/index.html"
 
   const deferred = Q.defer!
 

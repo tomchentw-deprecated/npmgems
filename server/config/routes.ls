@@ -23,7 +23,7 @@ server.post '/api/mappings' mappings.create
 server.post '/api/comments' comments.create
 server.post '/api/comments/:id' comments.update
 
-server.get '/' index.render
+server.get '/api/users/_' users.current
 
 const authConfig =  do
   scope: <[ user:email ]>
