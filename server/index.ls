@@ -15,7 +15,7 @@ module.exports = ->
 
   server.use require('connect-livereload')! unless config.env.is 'production'
 
-  server.use express.static './public'
+  server.use express.static './public' maxAge: Infinity
   server.use express.static './tmp/public' unless config.env.is 'production'
 
   server.use !(req, res) -> res.render 'index.jade' res.bootstraping

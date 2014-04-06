@@ -2,9 +2,7 @@ $icon-font-path: 'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/fonts/';
 
 @import "bootstrap";
 @import "footer";
-/*
- * app
- */
+
 body {
   padding-top: 70px;
 
@@ -49,3 +47,4 @@ body {
     @extend %actor;
   }
 }
+

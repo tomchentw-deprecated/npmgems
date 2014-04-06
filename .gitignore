@@ -16,7 +16,14 @@ results
 
 npm-debug.log
 node_modules
+### Node End ###
+
+# Manually Created
+
+### Bower ###
+bower_components
+### Bower End ###
 
 ### Project ###
-bower_components
 tmp
+### Project End ###

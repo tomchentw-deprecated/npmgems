@@ -1,11 +1,13 @@
 !function exportedTasksDefinedBeginsHere
-  gulp.task 'client' <[ client:html client:css client:js ]> !->
-    return if config.env.is 'production'
-    livereload.listen config.port.livereload
+  gulp.task 'client' <[ client:html client:css client:js ]> !(done) ->
+    if config.env.is 'production'
+      gulp.start 'client:html' done
+    else
+      livereload.listen config.port.livereload, done
 
-    gulp.watch 'client/views/**/*', <[ client:html ]>
-    gulp.watch <[ client/templates/**/* client/javascripts/**/* lib/javascripts/**/* ]>, <[ client:html client:js ]>
-    gulp.watch 'client/stylesheets/**/*', <[ client:css ]>
+      gulp.watch 'client/views/**/*', <[ client:html ]>
+      gulp.watch <[ client/templates/**/* client/javascripts/**/* lib/javascripts/**/* ]>, <[ client:html client:js ]>
+      gulp.watch 'client/stylesheets/**/*', <[ client:css ]>
 /*
  * Implementation details
  */
@@ -23,6 +25,7 @@ require! {
   'gulp-livescript'
   'gulp-concat'
   'gulp-livereload'
+  'gulp-rev'
 }
 require! {
   hljs: 'highlight.js'
@@ -34,6 +37,20 @@ require! {
 }
 
 const livereload = tiny-lr!
+
+function identity
+  it
+
+function valueOf
+  @[it]
+
+function prependTimestampFactory (filepath)
+  if config.env.is 'production' and fs.existsSync filepath
+    fs.readFileSync filepath, 'utf8'
+    |> JSON.parse
+    |> valueOf.bind
+  else
+    identity
 /*
  * client tasks
  */
@@ -57,6 +74,8 @@ gulp.task 'client:html' <[ client:html:partials client:js:partials ]> ->
           path.extname it .substr 1
           fs.readFileSync it, 'utf8'
         .value
+      javascriptIncludeTag: prependTimestampFactory './tmp/js-manifest/rev-manifest.json'
+      stylesheetLinkTag: prependTimestampFactory './tmp/css-manifest/rev-manifest.json'
 
   .pipe gulp.dest 'tmp/public'
   .pipe gulp-livereload(livereload)
@@ -79,10 +98,15 @@ gulp.task 'client:css:bower_components' ->
   return stream.pipe gulp.dest 'tmp/.css-cache'
 
 gulp.task 'client:css' <[ client:css:scss client:css:bower_components ]> ->
-  return gulp.src 'tmp/.css-cache/*.css'
+  stream = gulp.src 'tmp/.css-cache/*.css'
   .pipe gulp-concat 'application.css'
-  .pipe gulp.dest 'tmp/public'
+  stream.=pipe gulp-rev! if config.env.is 'production'
+  stream.=pipe gulp.dest 'tmp/public'
   .pipe gulp-livereload(livereload)
+  if config.env.is 'production'
+    stream.=pipe gulp-rev.manifest!
+    .pipe gulp.dest 'tmp/css-manifest'
+  return stream
 
 gulp.task 'client:templates' ->
   stream = gulp.src 'client/templates/**/*.jade'
@@ -104,8 +128,14 @@ gulp.task 'client:js:ls' ->
   stream.=pipe gulp-uglify! if config.env.is 'production'
   return stream.pipe gulp.dest 'tmp/.js-cache'
 
-gulp.task 'client:js' <[ client:templates client:js:ls ]> ->
-  return gulp.src [
+gulp.task 'client:js:bower_components' ->
+  # stream = gulp.src [
+  # ]
+  # stream.=pipe gulp-uglify! if config.env.is 'production'
+  # return stream.pipe gulp.dest 'tmp/.js-cache'
+
+gulp.task 'client:js' <[ client:templates client:js:ls client:js:bower_components ]> ->
+  stream = gulp.src [
     'bower_components/angular/angular.min.js'
     'bower_components/angular-animate/angular-animate.min.js'
     'bower_components/angular-resource/angular-resource.min.js'
@@ -116,7 +146,12 @@ gulp.task 'client:js' <[ client:templates client:js:ls ]> ->
     'tmp/.js-cache/*.js'
   ]
   .pipe gulp-concat 'application.js'
-  .pipe gulp.dest 'tmp/public'
+  stream.=pipe gulp-rev! if config.env.is 'production'
+  stream.=pipe gulp.dest 'tmp/public'
   .pipe gulp-livereload(livereload)
+  if config.env.is 'production'
+    stream.=pipe gulp-rev.manifest!
+    .pipe gulp.dest 'tmp/js-manifest'
+  return stream
 # define!
 exportedTasksDefinedBeginsHere!

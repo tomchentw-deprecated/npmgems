@@ -62,8 +62,3 @@ angular.module 'npmgems' <[
     $scope.viceVersa = !~>
       @toggleViceVersa!
       $scope.search!
-
-
-
-
-
