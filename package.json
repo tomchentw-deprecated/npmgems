@@ -42,7 +42,7 @@
     "express-promise": "^0.1.9",
     "passport": "^0.2.0",
     "passport-github": "^0.1.5",
-    "jade": "^1.2.0"
+    "newrelic": "^1.4.0"
   },
   "devDependencies": {
     "highlight.js": "^8.0.0",
