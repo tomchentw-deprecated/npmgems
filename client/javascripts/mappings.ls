@@ -1,4 +1,4 @@
-angular.module 'npmgems.mappings' <[]>
+angular.module 'application.mappings' <[]>
 .config <[
         $stateProvider
 ]> ++ !($stateProvider) ->

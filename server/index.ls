@@ -1,6 +1,7 @@
 require! {
   Q: q
   express
+  newrelic
 }
 require! {
   '../config'
@@ -9,14 +10,13 @@ require! {
   './config/sequelize'
 }
 
-module.exports = ->
-  <- setup!then
+module.exports = setup!then ->
   server.use server.router
 
   server.use require('connect-livereload')! unless config.env.is 'production'
 
   server.use express.static prefix = './public' maxAge: Infinity
-  server.use express.static prefix = './tmp/public' unless config.env.is 'production'
+  server.use express.static prefix = './tmp/public'
 
   server.use !(req, res) -> res.sendfile "#prefix/index.html"
 

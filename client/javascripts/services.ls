@@ -1,4 +1,4 @@
-angular.module 'npmgems.services' <[
+angular.module 'application.services' <[
   ngResource
 ]>
 .config <[

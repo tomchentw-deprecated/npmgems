@@ -1,13 +1,12 @@
-angular.module 'npmgems' <[
-  ngAnimate
+angular.module 'application' <[
   ngResource
   ngSanitize
   ui.bootstrap
   ui.router
   angular.ujs
-  npmgems.templates
-  npmgems.services
-  npmgems.mappings
+  application.templates
+  application.services
+  application.mappings
 ]>
 .config <[
         $stateProvider  $locationProvider
