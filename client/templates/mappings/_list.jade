@@ -5,21 +5,21 @@ ul#mappings_list.list-unstyled
         h3.row
           .col-xs-12.col-md-6
             span.label.label-default Ruby Gems
-            a.gems-name(ng-href="https://rubygems.org/gems/{{ mapping.gems }}" target="_blank") {{mapping.gems}} 
+            a.gems-name(ga ng-href="https://rubygems.org/gems/{{ mapping.gems }}" target="_blank" ng-bind="mapping.gems")
           .hidden-xs.hidden-sm.col-md-6
             span.pull-right.label.label-info Npm Packages
-            a.pull-right.npm-name(ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank")  {{mapping.npm}}
+            a.pull-right.npm-name(ga ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank" ng-bind="mapping.npm")
       .panel-body
         .row
           .col-xs-12.col-md-4
             p(ng-bind-html="mapping.gemsDesc | linky")
           .commenter.col-xs-12.col-md-4.text-center(ng-controller="CreateCommentCtrl as create"
             tooltip="{{ tooltipText }}" tooltip-placement="top" tooltip-trigger="mouseenter")
-            button.btn.btn-default(type="button" ng-disabled="!_.id" ng-click="create.go('positive')")
+            button.btn.btn-default(ga type="button" ng-disabled="!_.id" ng-click="create.go('positive')")
               span.glyphicon.glyphicon-arrow-up
               |  Works like a charm!
             |  ... or 
-            a(ng-disabled="!_.id" ng-click="create.go('negative')")
+            a(ga ng-disabled="!_.id" ng-click="create.go('negative')")
               | Nah 
               span.glyphicon.glyphicon-arrow-down
 
@@ -28,24 +28,24 @@ ul#mappings_list.list-unstyled
                 label(for="comment_content") Reason?
                 textarea.form-control#comment_content(ng-model="comment.content" placeholder="Optional")
 
-              a(ng-hide="commentForm.$pristine" ng-click="create.go('positive')") Ok, I'm done
+              a(ga ng-hide="commentForm.$pristine" ng-click="create.go('positive')") Ok, I'm done
 
             p(ng-show="'negative' == state")
               | Would you like to suggest a new mapping? 
-              a(ui-sref="Mapping.Create") Yes
+              a(ga ui-sref="Mapping.Create") Yes
 
             ul.media-list.text-left
               li.media(ng-repeat="comment in mapping.comments")
-                a.pull-left
+                a.pull-left(ga)
                   img.media-object.img-rounded(ng-src="{{ comment.author.gravatarId | gravatar }}")
                 .media-body
-                  h4.media-heading {{ comment.author.displayName }}
-                  p {{ comment.content }}
+                  h4.media-heading(ng-bind="comment.author.displayName")
+                  p(ng-bind="comment.content")
 
           .col-xs-12.col-md-4
             p.text-right(ng-bind-html="mapping.npmDesc | linky")
       .panel-footer.clearfix.visible-xs.visible-sm
         h3.pull-right
-          a.npm-name(ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank")  {{mapping.npm}}
+          a.npm-name(ga ng-href="https://www.npmjs.org/package/{{ mapping.npm }}" target="_blank" ng-bind="mapping.npm")
           span.label.label-info Npm Packages
     

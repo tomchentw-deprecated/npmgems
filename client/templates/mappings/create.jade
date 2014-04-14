@@ -8,7 +8,7 @@
               .input-group
                 span.input-group-addon Ruby Gems
                 input.form-control(type="text" ng-model="gemsName" required)
-                a.input-group-addon(ng-if="gems" ng-href="https://rubygems.org/gems/{{ gems.name }}" target="_blank")
+                a.input-group-addon(ga ng-if="gems" ng-href="https://rubygems.org/gems/{{ gems.name }}" target="_blank")
                   span.glyphicon.glyphicon-link
           .panel-body(ng-bind-html="gems.info | linky")
 
@@ -22,7 +22,7 @@
           .panel-heading
             .form-group.h3
               .input-group
-                a.input-group-addon(ng-if="npm" ng-href="https://www.npmjs.org/package/{{ npm.name }}" target="_blank")
+                a.input-group-addon(ga ng-if="npm" ng-href="https://www.npmjs.org/package/{{ npm.name }}" target="_blank")
                   span.glyphicon.glyphicon-link
                 input.form-control(type="text" ng-model="npmName" required)
                 span.input-group-addon Npm Packages
