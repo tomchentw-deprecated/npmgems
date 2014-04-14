@@ -1,7 +1,8 @@
 angular.module 'application' <[
+  ui.bootstrap
+  ga
   ngResource
   ngSanitize
-  ui.bootstrap
   ui.router
   angular.ujs
   application.templates

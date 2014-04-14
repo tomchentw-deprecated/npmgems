@@ -1,11 +1,10 @@
 # npmgems
-
 > NPM with RubyGems
 
-[![Travis CI   ](https://img.shields.io/travis/tomchentw/npmgems/master.svg)             ](https://travis-ci.org/tomchentw/npmgems)
-[![Quality     ](https://img.shields.io/codeclimate/github/tomchentw/npmgems.svg)        ](https://codeclimate.com/github/tomchentw/npmgems)
-[![Coverage    ](https://img.shields.io/coveralls/tomchentw/npmgems.svg)                 ](https://coveralls.io/r/tomchentw/npmgems)
-[![Dependencies](https://img.shields.io/gemnasium/tomchentw/npmgems.svg)                 ](https://gemnasium.com/tomchentw/npmgems)
+[![Travis CI   ](https://travis-ci.org/tomchentw/npmgems.svg?branch=master)                         ](https://travis-ci.org/tomchentw/npmgems)
+[![Quality     ](https://img.shields.io/codeclimate/github/tomchentw/npmgems.svg)                   ](https://codeclimate.com/github/tomchentw/npmgems)
+[![Coverage    ](https://img.shields.io/coveralls/tomchentw/npmgems.svg)                            ](https://coveralls.io/r/tomchentw/npmgems)
+[![Dependencies](https://gemnasium.com/tomchentw/npmgems.svg)                                       ](https://gemnasium.com/tomchentw/npmgems)
 
 
 ## Project philosophy

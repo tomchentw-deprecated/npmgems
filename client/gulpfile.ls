@@ -34,7 +34,6 @@ require! {
 unless config.env.is 'production'
   require! {
     'tiny-lr'
-    'connect-livereload'
     'gulp-livereload'
   }
   const livereload = tiny-lr!
@@ -57,7 +56,10 @@ function prependTimestampFactory (filepath)
  */
 gulp.task 'client:html:partials' ->
   return gulp.src 'client/views/partials/*.jade'
-  .pipe gulp-jade pretty: true
+  # {doctype: 'html'} https://github.com/visionmedia/jade/issues/1180#issuecomment-40351567
+  .pipe gulp-jade do
+    pretty: true
+    doctype: 'html'
   .pipe gulp.dest 'tmp/.html-cache/partials'
 
 gulp.task 'client:js:partials' ->
@@ -69,6 +71,7 @@ gulp.task 'client:html' <[ client:html:partials client:js:partials ]> ->
   stream = gulp.src 'client/views/*.jade'
   .pipe gulp-jade do
     pretty: !config.env.is 'production'
+    doctype: 'html'
     locals:
       highlight: ->
         hljs.highlight do
@@ -114,7 +117,9 @@ gulp.task 'client:css' <[ client:css:scss client:css:bower_components ]> ->
 
 gulp.task 'client:templates' ->
   stream = gulp.src 'client/templates/**/*.jade'
-  .pipe gulp-jade pretty: !config.env.is 'production'
+  .pipe gulp-jade do
+    pretty: !config.env.is 'production'
+    doctype: 'html'
   .pipe gulp-angular-templatecache do
     root: '/'
     module: 'application.templates'
@@ -133,17 +138,18 @@ gulp.task 'client:js:ls' ->
   return stream.pipe gulp.dest 'tmp/.js-cache'
 
 gulp.task 'client:js:bower_components' ->
-  # stream = gulp.src [
-  # ]
-  # stream.=pipe gulp-uglify! if config.env.is 'production'
-  # return stream.pipe gulp.dest 'tmp/.js-cache'
+  stream = gulp.src [
+    'bower_components/angular-ga/ga.js'
+  ]
+  stream.=pipe gulp-uglify! if config.env.is 'production'
+  return stream.pipe gulp.dest 'tmp/.js-cache'
 
 gulp.task 'client:js' <[ client:templates client:js:ls client:js:bower_components ]> ->
   stream = gulp.src [
     'bower_components/angular/angular.min.js'
+    'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
     'bower_components/angular-resource/angular-resource.min.js'
     'bower_components/angular-sanitize/angular-sanitize.min.js'
-    'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js'
     'client/javascripts/vendor/angular-ui-router.min.js'
     'client/javascripts/vendor/angular-ujs.min.js'
     'tmp/.js-cache/*.js'
